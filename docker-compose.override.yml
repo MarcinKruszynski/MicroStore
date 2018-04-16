@@ -5,11 +5,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "80"
+      - "5001:80"
+    volumes:
+      - ./ApiGateways/apigw:/app/configuration
 
   productservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "80"
+      - "5002:80"
 

@@ -5,11 +5,11 @@ services:
     image: apigateway
     build:
       context: .
-      dockerfile: ApiGateway/Dockerfile
+      dockerfile: ApiGateways/ApiGateway/Dockerfile
 
   productservice:
     image: productservice
     build:
       context: .
-      dockerfile: ProductService/Dockerfile
+      dockerfile: Services/ProductService/Dockerfile
 

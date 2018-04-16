@@ -2,13 +2,12 @@ FROM microsoft/aspnetcore:2.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/aspnetcore-build:2.0 AS build
+FROM microsoft/aspnetcore-build:2.0.5-2.1.4 AS build
 WORKDIR /src
-COPY MicroStore.sln ./
-COPY ProductService/ProductService.csproj ProductService/
-RUN dotnet restore -nowarn:msb3202,nu1503
+COPY Services/ProductService/ProductService.csproj Services/ProductService/
+RUN dotnet restore Services/ProductService/
 COPY . .
-WORKDIR /src/ProductService
+WORKDIR /src/Services/ProductService
 RUN dotnet build -c Release -o /app
 
 FROM build AS publish

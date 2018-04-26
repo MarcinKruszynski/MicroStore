@@ -1,11 +1,18 @@
 version: '3'
 
 services:
-  apigateway:
+  identityservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "5001:80"
+      - "5201:80"
+
+  apigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://identityservice 
+    ports:
+      - "5200:80"
     volumes:
       - ./ApiGateways/apigw:/app/configuration
 
@@ -13,5 +20,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "5002:80"
+      - "5101:80"
+
+
+  
 

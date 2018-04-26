@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apigw", "apigw", "{AE563319
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductService", "Services\ProductService\ProductService.csproj", "{A6B5178C-2A9C-4634-883D-4B4828E903FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "Services\IdentityService\IdentityService.csproj", "{6865FEBB-DD53-4116-A937-6FA5BD8BE067}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{A6B5178C-2A9C-4634-883D-4B4828E903FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6B5178C-2A9C-4634-883D-4B4828E903FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6B5178C-2A9C-4634-883D-4B4828E903FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6865FEBB-DD53-4116-A937-6FA5BD8BE067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6865FEBB-DD53-4116-A937-6FA5BD8BE067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6865FEBB-DD53-4116-A937-6FA5BD8BE067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6865FEBB-DD53-4116-A937-6FA5BD8BE067}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 		{161FBD43-2A9E-44C0-BCF3-A61A6C697596} = {964F9328-36C2-40F3-968A-BCAEF5743753}
 		{AE563319-E8BF-4FA7-9BFD-475C4C3A5B62} = {964F9328-36C2-40F3-968A-BCAEF5743753}
 		{A6B5178C-2A9C-4634-883D-4B4828E903FF} = {FCFD60BF-475F-48F7-951F-BE0BEEC13324}
+		{6865FEBB-DD53-4116-A937-6FA5BD8BE067} = {FCFD60BF-475F-48F7-951F-BE0BEEC13324}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E56F6426-E8C9-453E-8798-4C4554B2E740}

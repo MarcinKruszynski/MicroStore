@@ -25,6 +25,32 @@ namespace ApiGateway
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
+            var authenticationProviderKey = "IdentityApiKey";
+
+            services.AddAuthentication()
+               .AddJwtBearer(authenticationProviderKey, x =>
+               {
+                   x.Authority = identityUrl;
+                   x.RequireHttpsMetadata = false;
+                   x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                   {
+                       ValidAudiences = new[] { "products" }
+                   };
+                   x.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents()
+                   {
+                       OnAuthenticationFailed = async ctx =>
+                       {                           
+                       },
+                       OnTokenValidated = async ctx =>
+                       {                           
+                       },
+                       OnMessageReceived = async ctx =>
+                       {                           
+                       }
+                   };
+               });
+
             services.AddOcelot(Configuration);
         }        
 

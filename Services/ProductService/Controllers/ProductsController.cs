@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ProductService.Controllers
 {
     [Route("api/v1/[controller]")]
-    public class ProductController: Controller
+    public class ProductsController: Controller
     {        
         [HttpGet]
         public IEnumerable<string> Get()

@@ -23,5 +23,9 @@ services:
       - "5101:80"
 
 
-  
+  webapp:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5100:80"
 

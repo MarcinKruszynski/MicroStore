@@ -17,8 +17,14 @@ services:
     image: productservice
     build:
       context: .
-      dockerfile: Services/ProductService/Dockerfile
+      dockerfile: Services/ProductService/Dockerfile  
 
 
-  
-
+  webapp:
+    image: webapp
+    build:
+      context: .
+      dockerfile: Clients/WebApp/Dockerfile
+    depends_on:
+      - identityservice
+      - productservice

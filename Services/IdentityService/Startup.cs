@@ -38,13 +38,16 @@ namespace IdentityService
 
             services.AddMvc();
 
+            var clientUrls = new Dictionary<string, string>();            
+            clientUrls.Add("Spa", Configuration.GetValue<string>("SpaClient"));
+
             // configure identity server with in-memory stores, keys, clients and scopes
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 .AddInMemoryPersistedGrants()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients())
+                .AddInMemoryClients(Config.GetClients(clientUrls))
                 .AddAspNetIdentity<ApplicationUser>();
         }
 

@@ -28,6 +28,15 @@ namespace ApiGateway
             var identityUrl = Configuration.GetValue<string>("IdentityUrl");
             var authenticationProviderKey = "IdentityApiKey";
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
             services.AddAuthentication()
                .AddJwtBearer(authenticationProviderKey, x =>
                {
@@ -60,7 +69,9 @@ namespace ApiGateway
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }            
+            }
+
+            app.UseCors("CorsPolicy");
 
             app.UseOcelot().Wait();
         }

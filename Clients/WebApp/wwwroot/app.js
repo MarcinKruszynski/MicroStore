@@ -18,43 +18,68 @@ document.getElementById("login").addEventListener("click", login, false);
 document.getElementById("api").addEventListener("click", api, false);
 document.getElementById("logout").addEventListener("click", logout, false);
 
-var config = {
-    authority: "http://localhost:5201",
-    client_id: "spa",
-    redirect_uri: "http://localhost:5100/callback.html",
-    response_type: "id_token token",
-    scope:"openid profile products",
-    post_logout_redirect_uri : "http://localhost:5100/index.html",
-};
-var mgr = new Oidc.UserManager(config);
+var mgr;
+var serverSettings;
 
-mgr.getUser().then(function (user) {
-    if (user) {
-        log("User logged in", user.profile);
+const baseURI = document.baseURI.endsWith('/') ? document.baseURI : `${document.baseURI}/`;
+var url = `${baseURI}Home/Configuration`;
+
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+        console.log('server settings loaded');
+        var serverSettings = response.json();
+        console.log(serverSettings);
+
+        if (!serverSettings)
+            return;
+
+        var config = {
+            authority: serverSettings.identityUrl,
+            client_id: "spa",
+            redirect_uri: baseURI + "/callback.html",
+            response_type: "id_token token",
+            scope: "openid profile products",
+            post_logout_redirect_uri: baseURI + "/index.html"
+        };
+
+        mgr = new Oidc.UserManager(config);
+
+        mgr.getUser().then(function (user) {
+            if (user) {
+                log("User logged in", user.profile);
+            }
+            else {
+                log("User not logged in");
+            }
+        });
     }
-    else {
-        log("User not logged in");
-    }
-});
+};
+xhttp.open("GET", url, true);
+xhttp.send();
+
 
 function login() {
-    mgr.signinRedirect();
+    if (mgr)
+        mgr.signinRedirect();
 }
 
 function api() {
-    mgr.getUser().then(function (user) {
-        var url = "http://localhost:5101/api/v1/products";
+    if (mgr && serverSettings)
+        mgr.getUser().then(function (user) {
+            var url = serverSettings.productUrl + "/api/v1/products";
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url);
-        xhr.onload = function () {
-            log(xhr.status, JSON.parse(xhr.responseText));
-        }
-        xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
-        xhr.send();
-    });
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url);
+            xhr.onload = function () {
+                log(xhr.status, JSON.parse(xhr.responseText));
+            };
+            xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
+            xhr.send();
+        });
 }
 
 function logout() {
-    mgr.signoutRedirect();
+    if (mgr)
+        mgr.signoutRedirect();
 }

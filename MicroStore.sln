@@ -22,7 +22,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService", "Services
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{45DB7513-E6BF-49A3-BA1B-C8E3E2CD8C18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "Clients\WebApp\WebApp.csproj", "{B4F98016-A20E-48FB-A102-AF0E83295E6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "Clients\WebApp\WebApp.csproj", "{B4F98016-A20E-48FB-A102-AF0E83295E6A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C41EE9A-6DE2-4549-9E33-54B88106B43C}"
+	ProjectSection(SolutionItems) = preProject
+		.env = .env
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

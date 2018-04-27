@@ -28,7 +28,7 @@ namespace IdentityService
             };
         }
 
-        public static IEnumerable<Client> GetClients()
+        public static IEnumerable<Client> GetClients(Dictionary<string, string> clientsUrl)
         {
             return new[]
             {
@@ -40,10 +40,10 @@ namespace IdentityService
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
 
-                    RedirectUris = { "http://localhost:5202/callback.html" },
+                    RedirectUris = { $"{clientsUrl["Spa"]}/callback.html" },
                     RequireConsent = false,
-                    PostLogoutRedirectUris = { "http://localhost:5202/index.html" },
-                    AllowedCorsOrigins = { "http://localhost:5202" },
+                    PostLogoutRedirectUris = { $"{clientsUrl["Spa"]}/index.html" },
+                    AllowedCorsOrigins = { $"{clientsUrl["Spa"]}" },
 
                     AllowedScopes =
                     {

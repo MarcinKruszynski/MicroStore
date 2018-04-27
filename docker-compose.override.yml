@@ -4,6 +4,7 @@ services:
   identityservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - SpaClient=http://${EXTERNAL_DNS_NAME_OR_IP}:5100,
     ports:
       - "5201:80"
 
@@ -19,6 +20,7 @@ services:
   productservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://identityservice 
     ports:
       - "5101:80"
 
@@ -26,6 +28,8 @@ services:
   webapp:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5201               
+      - ProductUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5101
     ports:
       - "5100:80"
 

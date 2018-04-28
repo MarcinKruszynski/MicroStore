@@ -24,39 +24,37 @@ var serverSettings;
 const baseURI = document.baseURI.endsWith('/') ? document.baseURI : `${document.baseURI}/`;
 var url = `${baseURI}Home/Configuration`;
 
-var xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        console.log('server settings loaded');
-        var serverSettings = response.json();
-        console.log(serverSettings);
+var xhr = new XMLHttpRequest();
+xhr.open("GET", url);
+xhr.onload = function () {
+    console.log('server settings loaded');
+    var serverSettings = JSON.parse(xhr.responseText);
+    console.log(serverSettings);
 
-        if (!serverSettings)
-            return;
+    if (!serverSettings)
+        return;
 
-        var config = {
-            authority: serverSettings.identityUrl,
-            client_id: "spa",
-            redirect_uri: baseURI + "/callback.html",
-            response_type: "id_token token",
-            scope: "openid profile products",
-            post_logout_redirect_uri: baseURI + "/index.html"
-        };
+    var config = {
+        authority: serverSettings.identityUrl,
+        client_id: "spa",
+        redirect_uri: baseURI + "callback.html",
+        response_type: "id_token token",
+        scope: "openid profile products",
+        post_logout_redirect_uri: baseURI + "index.html"
+    };
 
-        mgr = new Oidc.UserManager(config);
+    mgr = new Oidc.UserManager(config);
 
-        mgr.getUser().then(function (user) {
-            if (user) {
-                log("User logged in", user.profile);
-            }
-            else {
-                log("User not logged in");
-            }
-        });
-    }
+    mgr.getUser().then(function (user) {
+        if (user) {
+            log("User logged in", user.profile);
+        }
+        else {
+            log("User not logged in");
+        }
+    });
 };
-xhttp.open("GET", url, true);
-xhttp.send();
+xhr.send();
 
 
 function login() {

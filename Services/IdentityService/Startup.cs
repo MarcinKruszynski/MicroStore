@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using IdentityService.Data;
 using IdentityService.Models;
 using IdentityService.Services;
+using IdentityServer4.Services;
 
 namespace IdentityService
 {
@@ -38,16 +39,19 @@ namespace IdentityService
 
             services.AddMvc();
 
+            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
+
             var clientUrls = new Dictionary<string, string>();            
             clientUrls.Add("Spa", Configuration.GetValue<string>("SpaClient"));
 
             // configure identity server with in-memory stores, keys, clients and scopes
-            services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
+            services.AddIdentityServer(opt => opt.IssuerUri = identityUrl)                
                 .AddInMemoryPersistedGrants()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClients(Config.GetClients(clientUrls))
+                .AddCorsPolicyService<InMemoryCorsPolicyService>()
+                .AddDeveloperSigningCredential()
                 .AddAspNetIdentity<ApplicationUser>();
         }
 
@@ -66,6 +70,8 @@ namespace IdentityService
             }
 
             app.UseStaticFiles();
+
+            //app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 
             app.UseIdentityServer();
 

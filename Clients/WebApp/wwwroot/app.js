@@ -18,6 +18,7 @@ document.getElementById("login").addEventListener("click", login, false);
 document.getElementById("api").addEventListener("click", api, false);
 document.getElementById("logout").addEventListener("click", logout, false);
 
+/*
 var mgr;
 var serverSettings;
 
@@ -55,6 +56,26 @@ xhr.onload = function () {
     });
 };
 xhr.send();
+*/
+
+var config = {
+    authority: "http://localhost:5201",
+    client_id: "spa",
+    redirect_uri: "http://localhost:5100/callback.html",
+    response_type: "id_token token",
+    scope: "openid profile products",
+    post_logout_redirect_uri: "http://localhost:5100/index.html",
+};
+var mgr = new Oidc.UserManager(config);
+
+mgr.getUser().then(function (user) {
+    if (user) {
+        log("User logged in", user.profile);
+    }
+    else {
+        log("User not logged in");
+    }
+});
 
 
 function login() {
@@ -63,9 +84,10 @@ function login() {
 }
 
 function api() {
-    if (mgr && serverSettings)
+    if (mgr /*&& serverSettings*/)
         mgr.getUser().then(function (user) {
-            var url = serverSettings.productUrl + "/api/v1/products";
+            //var url = serverSettings.productUrl + "/api/v1/products";
+            var url = "http://localhost:5101/api/v1/products";
 
             var xhr = new XMLHttpRequest();
             xhr.open("GET", url);

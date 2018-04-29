@@ -1,11 +1,16 @@
 version: '3'
 
 services:
+  usersdb:
+    image: postgres
+    
   identityservice:
     image: identityservice
     build:
       context: .
       dockerfile: Services/IdentityService/Dockerfile
+    depends_on:
+     - usersdb
 
   apigateway:
     image: apigateway

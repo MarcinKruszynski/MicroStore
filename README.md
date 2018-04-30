@@ -1,3 +1,15 @@
 # MicroStore
 
-Just 4 fun. Sample .NET microservice app. 
+Just 4 fun. 
+
+Sample ASP.NET Core microservice app using:
+
+- ASP.NET Core 2.x
+- Docker
+- Ocelot 
+- IdentityServer4
+- PostgreSQL
+
+To be continued
+
+

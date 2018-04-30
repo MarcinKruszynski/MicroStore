@@ -87,7 +87,7 @@ function api() {
     if (mgr /*&& serverSettings*/)
         mgr.getUser().then(function (user) {
             //var url = serverSettings.productUrl + "/api/v1/products";
-            var url = "http://localhost:5101/api/v1/products";
+            var url = "http://localhost:5200/api/v1/p/products";
 
             var xhr = new XMLHttpRequest();
             xhr.open("GET", url);

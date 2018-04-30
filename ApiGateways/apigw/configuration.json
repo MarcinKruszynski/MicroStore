@@ -10,7 +10,11 @@
         }
       ],
       "UpstreamPathTemplate": "/api/{version}/p/{everything}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": []
+      }
     }
   ],
     "GlobalConfiguration": {

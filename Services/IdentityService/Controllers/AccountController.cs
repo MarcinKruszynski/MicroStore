@@ -245,7 +245,7 @@ namespace IdentityService.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout1()
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");

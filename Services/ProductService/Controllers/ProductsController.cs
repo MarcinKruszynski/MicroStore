@@ -12,17 +12,11 @@ namespace ProductService.Controllers
     public class ProductsController: Controller
     {
         [HttpGet]
-        public IActionResult Get()
+        public IEnumerable<string> Get()
         {
-            return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
+            return new string[] { "My Album", "My Album de Lux" };
         }
 
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "DM 4", "Drużyna mistrzów 5" };
-        //}
-        
         [HttpGet("{id}")]
         public string Get(int id)
         {

@@ -8,6 +8,7 @@ Sample ASP.NET Core microservice app using:
 - Docker
 - Ocelot 
 - IdentityServer4
+- EF Core 2.x
 - PostgreSQL
 
 To be continued

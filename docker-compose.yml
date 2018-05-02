@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  usersdb:
+  identitydb:
     image: postgres
     
   identityservice:
@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Services/IdentityService/Dockerfile
     depends_on:
-     - usersdb
+     - identitydb
 
   apigateway:
     image: apigateway

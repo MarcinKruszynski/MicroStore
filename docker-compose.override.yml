@@ -1,23 +1,25 @@
 version: '3'
 
 services:
-  usersdb:
+  identitydb:
     restart: always
     environment:
       POSTGRES_PASSWORD: password 
     volumes:
-      - postgres-users-data-volume:/var/lib/postgresql/data
+      - postgres-identity-data-volume:/var/lib/postgresql/data
     ports:
       - "5433:5432" 
 
   identityservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:DefaultConnection=Host=usersdb;Database=postgres;Username=postgres;Password=password" 
+      - "ConnectionStrings:DefaultConnection=Host=identitydb;Database=identitydb;Username=postgres;Password=password" 
       - IdentityUrl=http://identityservice 
       - SpaClient=http://${EXTERNAL_DNS_NAME_OR_IP}:5100
     ports:
       - "5201:80"
+    volumes:
+      - ./Services/identitycert:/app/cert
 
   apigateway:
     environment:
@@ -46,4 +48,4 @@ services:
 
 
 volumes:
-  postgres-users-data-volume:
+  postgres-identity-data-volume:

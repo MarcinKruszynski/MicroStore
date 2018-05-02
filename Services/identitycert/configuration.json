@@ -1,0 +1,8 @@
+{
+  "SigninKeyCredentials": {
+    "KeyFileName": "idsrv3test.pfx",
+    "KeyFilePassword": "idsrv3test"
+  }
+}
+
+  

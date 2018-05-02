@@ -4,8 +4,9 @@ EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0.5-2.1.4 AS build
 WORKDIR /src
+COPY MicroStore.sln ./
 COPY Services/IdentityService/IdentityService.csproj Services/IdentityService/
-RUN dotnet restore Services/IdentityService/
+RUN dotnet restore -nowarn:msb3202,nu1503
 COPY . .
 WORKDIR /src/Services/IdentityService
 RUN dotnet build -c Release -o /app

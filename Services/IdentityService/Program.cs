@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
+using IdentityServer4.EntityFramework.DbContexts;
+using IdentityService.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityService
 {
@@ -14,11 +12,22 @@ namespace IdentityService
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            BuildWebHost(args)
+                .MigrateDbContext<PersistedGrantDbContext>((_, __) => { })
+                .MigrateDbContext<ApplicationDbContext>((_, __) => { }) 
+                .MigrateDbContext<ConfigurationDbContext>((context, services) =>
+                {
+                    var configuration = services.GetService<IConfiguration>();
+
+                    new ConfigurationDbContextSeed()
+                        .SeedAsync(context, configuration)
+                        .Wait();
+                }).Run();            
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(ic => ic.AddJsonFile(Path.Combine("cert", "configuration.json")))
                 .UseStartup<Startup>()
                 .Build();
     }

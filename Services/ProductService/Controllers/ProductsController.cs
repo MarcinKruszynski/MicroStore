@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using NServiceBus;
+using ProductService.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +14,42 @@ namespace ProductService.Controllers
     [Authorize]
     public class ProductsController: Controller
     {
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IEndpointInstance _endpoint;
+        private readonly ProductContext _productContext;
+
+        public ProductsController(ProductContext context, IEndpointInstance endpoint)
         {
-            return new string[] { "My Album", "My Album de Lux" };
+            _endpoint = endpoint;
+            _productContext = context ?? throw new ArgumentNullException(nameof(context));
+
+            context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet]        
+        public async Task<IActionResult> Get()
         {
-            return $"DM {id}";
-        }       
+            var items = await _productContext.ProductItems
+                .OrderBy(c => c.Name)                
+                .ToListAsync();            
+
+            return Ok(items);
+        }        
+
+        [HttpGet("{id}")]        
+        public async Task<IActionResult> Get(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            var item = await _productContext.ProductItems.SingleOrDefaultAsync(ci => ci.Id == id);
+            if (item != null)
+            {
+                return Ok(item);
+            }
+
+            return NotFound();
+        }
     }
 }

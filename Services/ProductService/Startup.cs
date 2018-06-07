@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
+using ProductService.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProductService
 {
@@ -23,6 +26,18 @@ namespace ProductService
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.AddEntityFrameworkNpgsql().AddDbContext<ProductContext>(options =>
+                options.UseNpgsql(connectionString,
+                    sql =>
+                    {
+                        sql.MigrationsAssembly(migrationsAssembly);
+                        sql.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
+                    }));
+
+
             services.AddMvcCore()
                 .AddAuthorization()
                 .AddJsonFormatters();

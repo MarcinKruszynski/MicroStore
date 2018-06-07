@@ -3,6 +3,9 @@ version: '3.4'
 services:
   identitydb:
     image: postgres
+
+  productdb:
+    image: postgres
     
   identityservice:
     image: identityservice
@@ -22,7 +25,9 @@ services:
     image: productservice
     build:
       context: .
-      dockerfile: Services/ProductService/Dockerfile  
+      dockerfile: Services/ProductService/Dockerfile
+    depends_on:
+     - productdb
 
 
   webapp:

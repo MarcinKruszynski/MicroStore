@@ -4,8 +4,9 @@ EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0.5-2.1.4 AS build
 WORKDIR /src
+COPY MicroStore.sln ./
 COPY Services/ProductService/ProductService.csproj Services/ProductService/
-RUN dotnet restore Services/ProductService/
+RUN dotnet restore -nowarn:msb3202,nu1503
 COPY . .
 WORKDIR /src/Services/ProductService
 RUN dotnet build -c Release -o /app

@@ -10,6 +10,15 @@ services:
     ports:
       - "5433:5432" 
 
+  productdb:
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password 
+    volumes:
+      - postgres-product-data-volume:/var/lib/postgresql/data
+    ports:
+      - "5434:5432" 
+
   identityservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -33,6 +42,7 @@ services:
   productservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DefaultConnection=Host=productdb;Database=productdb;Username=postgres;Password=password"
       - IdentityUrl=http://identityservice 
     ports:
       - "5101:80"
@@ -49,3 +59,4 @@ services:
 
 volumes:
   postgres-identity-data-volume:
+  postgres-product-data-volume:

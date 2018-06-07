@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NServiceBus;
 using ProductService.Data;
+using ProductService.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace ProductService.Controllers
@@ -17,15 +19,17 @@ namespace ProductService.Controllers
         private readonly IEndpointInstance _endpoint;
         private readonly ProductContext _productContext;
 
-        public ProductsController(ProductContext context, IEndpointInstance endpoint)
+        public ProductsController(ProductContext context /*, IEndpointInstance endpoint*/)
         {
-            _endpoint = endpoint;
+            //_endpoint = endpoint;
             _productContext = context ?? throw new ArgumentNullException(nameof(context));
 
             context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        [HttpGet]        
+        [HttpGet]
+        [Route("")]
+        [ProducesResponseType(typeof(IEnumerable<ProductItem>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get()
         {
             var items = await _productContext.ProductItems
@@ -35,7 +39,10 @@ namespace ProductService.Controllers
             return Ok(items);
         }        
 
-        [HttpGet("{id}")]        
+        [HttpGet]
+        [Route("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ProductItem), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get(int id)
         {
             if (id <= 0)

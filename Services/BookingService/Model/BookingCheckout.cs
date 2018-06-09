@@ -1,0 +1,17 @@
+﻿using System;
+
+namespace BookingService.Model
+{
+    public class BookingCheckout
+    {
+        public Guid RequestId { get; set; }
+
+        public string ProductId { get; set; }
+
+        public string ProductName { get; set; }
+
+        public decimal UnitPrice { get; set; }
+
+        public int Quantity { get; set; }
+    }
+}

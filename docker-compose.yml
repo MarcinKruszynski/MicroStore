@@ -9,9 +9,6 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.7.5-management-alpine
-    ports:
-      - "15672:15672"
-      - "5672:5672"
     
   identityservice:
     image: identityservice
@@ -35,6 +32,12 @@ services:
     depends_on:
      - productdb
      - rabbitmq
+
+  bookingservice:
+    image: bookingservice
+    build:
+      context: .
+      dockerfile: Services/BookingService/Dockerfile
 
   webapp:
     image: webapp

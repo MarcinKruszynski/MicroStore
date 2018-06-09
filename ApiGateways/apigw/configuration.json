@@ -15,6 +15,22 @@
         "AuthenticationProviderKey": "IdentityApiKey",
         "AllowedScopes": []
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{version}/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "bookingservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{version}/b/{everything}",
+      "UpstreamHttpMethod": [],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": []
+      }
     }
   ],
     "GlobalConfiguration": {

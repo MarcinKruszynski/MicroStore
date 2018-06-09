@@ -16,6 +16,7 @@ function log() {
 
 document.getElementById("login").addEventListener("click", login, false);
 document.getElementById("api").addEventListener("click", api, false);
+document.getElementById("checkout").addEventListener("click", checkout, false);
 document.getElementById("logout").addEventListener("click", logout, false);
 
 /*
@@ -96,6 +97,41 @@ function api() {
             };
             xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
             xhr.send();
+        });
+}
+
+function newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function checkout() {
+    if (mgr)
+        mgr.getUser().then(function (user) {            
+            var url = "http://localhost:5200/api/v1/b/bookings";
+
+            var guid = newGuid();
+
+            var data = {
+                productId: 1,
+                productName: "Progressive apps - 31.06.2018",
+                unitPrice: 404,
+                quantity: 1
+            };
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url);            
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    log(xhr.status, JSON.parse(xhr.responseText));
+                }
+            };
+            xhr.setRequestHeader("x-requestid", guid);
+            xhr.setRequestHeader("Content-type", "application/json");            
+            xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
+            xhr.send(JSON.stringify(data));
         });
 }
 

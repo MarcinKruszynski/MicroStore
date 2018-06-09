@@ -19,9 +19,8 @@ namespace ProductService.Controllers
         private readonly IEndpointInstance _endpoint;
         private readonly ProductContext _productContext;
 
-        public ProductsController(ProductContext context /*, IEndpointInstance endpoint*/)
+        public ProductsController(ProductContext context)
         {
-            //_endpoint = endpoint;
             _productContext = context ?? throw new ArgumentNullException(nameof(context));
 
             context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;

@@ -44,6 +44,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:DefaultConnection=Host=productdb;Database=productdb;Username=postgres;Password=password"
       - IdentityUrl=http://identityservice 
+      - EventBusConnection=rabbitmq
+      - EventBusUserName=guest
+      - EventBusPassword=guest  
     ports:
       - "5101:80"
 

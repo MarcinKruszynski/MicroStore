@@ -11,6 +11,9 @@ Sample ASP.NET Core microservice app using:
 - IdentityServer4
 - EF Core 2.x
 - PostgreSQL
+- RabbitMQ
+- Autofac
+- NServiceBus
 
 To be continued
 

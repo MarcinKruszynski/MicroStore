@@ -94,7 +94,7 @@ namespace ProductService
         {
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
 
-            EnsurePostgreSqlDatabaseExists(connectionString);
+            EnsurePostgreSqlDatabaseExistsAsync(connectionString).Wait();
 
             IEndpointInstance endpoint = null;
             containerBuilder.Register(c => endpoint)
@@ -151,34 +151,47 @@ namespace ProductService
             return container;
         }
 
-        void EnsurePostgreSqlDatabaseExists(string connectionString)
-        {            
-            var builder = new NpgsqlConnectionStringBuilder(connectionString);
-            var originalDatabase = builder.Database;
+        async Task EnsurePostgreSqlDatabaseExistsAsync(string connectionString)
+        {
+            var retry = Policy.Handle<SocketException>()
+                         .WaitAndRetryAsync(new TimeSpan[]
+                         {
+                             TimeSpan.FromSeconds(5),
+                             TimeSpan.FromSeconds(10),
+                             TimeSpan.FromSeconds(15),
+                         });
 
-            builder.Database = "postgres";
-            var masterConnectionString = builder.ConnectionString;
-
-            bool dbExists;
-            using (var connection = new NpgsqlConnection(masterConnectionString))
+            await retry.ExecuteAsync(async() =>
             {
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = $"SELECT 1 FROM pg_catalog.pg_database WHERE datname = '{originalDatabase}'";
+                var builder = new NpgsqlConnectionStringBuilder(connectionString);
+                var originalDatabase = builder.Database;
 
-                dbExists = command.ExecuteScalar() != null;
-            }
+                builder.Database = "postgres";
+                var masterConnectionString = builder.ConnectionString;
 
-            if (!dbExists)
-            {
+                bool dbExists;
                 using (var connection = new NpgsqlConnection(masterConnectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     var command = connection.CreateCommand();
-                    command.CommandText = $@"CREATE DATABASE ""{originalDatabase}""";
-                    command.ExecuteNonQuery();
+                    command.CommandText = $"SELECT 1 FROM pg_catalog.pg_database WHERE datname = '{originalDatabase}'";
+
+                    var result = await command.ExecuteScalarAsync();
+
+                    dbExists =  result != null;
                 }
-            }            
+
+                if (!dbExists)
+                {
+                    using (var connection = new NpgsqlConnection(masterConnectionString))
+                    {
+                        await connection.OpenAsync();
+                        var command = connection.CreateCommand();
+                        command.CommandText = $@"CREATE DATABASE ""{originalDatabase}""";
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+            });                  
         }
 
         private string GetRabbitConnectionString()

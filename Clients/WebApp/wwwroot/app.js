@@ -110,7 +110,7 @@ function newGuid() {
 function checkout() {
     if (mgr)
         mgr.getUser().then(function (user) {            
-            var url = "http://localhost:5200/api/v1/b/bookings";
+            var url = "http://localhost:5200/api/v1/b/bookings/checkout";
 
             var guid = newGuid();
 

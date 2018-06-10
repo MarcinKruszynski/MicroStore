@@ -64,7 +64,7 @@ var config = {
     client_id: "spa",
     redirect_uri: "http://localhost:5100/callback.html",
     response_type: "id_token token",
-    scope: "openid profile products",
+    scope: "openid profile products booking",
     post_logout_redirect_uri: "http://localhost:5100/index.html",
 };
 var mgr = new Oidc.UserManager(config);
@@ -124,8 +124,7 @@ function checkout() {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", url);            
             xhr.onreadystatechange = function () {
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                    log(xhr.status, JSON.parse(xhr.responseText));
+                if (xhr.readyState == XMLHttpRequest.DONE) {                    
                 }
             };
             xhr.setRequestHeader("x-requestid", guid);

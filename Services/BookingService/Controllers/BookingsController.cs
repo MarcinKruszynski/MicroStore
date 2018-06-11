@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using BookingService.Model;
 using BookingService.Services;
@@ -26,8 +27,19 @@ namespace BookingService.Controllers
         public async Task<IActionResult> Checkout([FromBody]BookingCheckout bookingCheckout, [FromHeader(Name = "x-requestid")] string requestId)
         {
             var userId = _identityService.GetUserIdentity();
+            bookingCheckout.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
+                guid : bookingCheckout.RequestId;
 
-            //to do            
+            if (bookingCheckout.RequestId != Guid.Empty)
+            {
+                //to do: check unique request id
+
+                var booking = new Booking(bookingCheckout.ProductId, bookingCheckout.ProductName, bookingCheckout.UnitPrice, bookingCheckout.Quantity);
+
+                //_bookingRepository.Add(booking);
+
+                //await _bookingRepository.SaveChangesAsync();
+            }
 
             return Accepted();
         }

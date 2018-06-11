@@ -6,7 +6,7 @@ namespace BookingService.Model
     {
         public Guid RequestId { get; set; }
 
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
 
         public string ProductName { get; set; }
 

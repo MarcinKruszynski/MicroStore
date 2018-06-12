@@ -41,12 +41,14 @@ namespace ProductService
                     {
                         sql.MigrationsAssembly(migrationsAssembly);
                         sql.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
-                    }));
+                    }),
+                    ServiceLifetime.Scoped);
 
 
             services.AddMvcCore()
                 .AddAuthorization()
-                .AddJsonFormatters();
+                .AddJsonFormatters()
+                .AddControllersAsServices();
 
             var identityUrl = Configuration.GetValue<string>("IdentityUrl");
 

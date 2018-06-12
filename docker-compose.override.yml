@@ -17,7 +17,16 @@ services:
     volumes:
       - postgres-product-data-volume:/var/lib/postgresql/data
     ports:
-      - "5434:5432" 
+      - "5434:5432"
+      
+  bookingdb:
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password 
+    volumes:
+      - postgres-booking-data-volume:/var/lib/postgresql/data
+    ports:
+      - "5435:5432" 
 
   rabbitmq:
     ports:
@@ -58,6 +67,7 @@ services:
   bookingservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DefaultConnection=Host=bookingdb;Database=bookingdb;Username=postgres;Password=password"
       - IdentityUrl=http://identityservice 
     ports:
       - "5102:80"
@@ -73,3 +83,4 @@ services:
 volumes:
   postgres-identity-data-volume:
   postgres-product-data-volume:
+  postgres-booking-data-volume:

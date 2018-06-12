@@ -115,6 +115,7 @@ function checkout() {
             var guid = newGuid();
 
             var data = {
+                requestId: guid,
                 productId: 1,
                 productName: "Progressive apps - 31.06.2018",
                 unitPrice: 404,
@@ -127,7 +128,7 @@ function checkout() {
                 if (xhr.readyState == XMLHttpRequest.DONE) {                    
                 }
             };
-            xhr.setRequestHeader("x-requestid", guid);
+            
             xhr.setRequestHeader("Content-type", "application/json");            
             xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
             xhr.send(JSON.stringify(data));

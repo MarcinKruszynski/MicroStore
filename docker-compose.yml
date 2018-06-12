@@ -7,6 +7,9 @@ services:
   productdb:
     image: postgres
 
+  bookingdb:
+    image: postgres
+
   rabbitmq:
     image: rabbitmq:3.7.5-management-alpine
     
@@ -38,6 +41,8 @@ services:
     build:
       context: .
       dockerfile: Services/BookingService/Dockerfile
+    depends_on:
+     - bookingdb
 
   webapp:
     image: webapp

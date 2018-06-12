@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using BookingService.Interfaces;
 using BookingService.Model;
 using BookingService.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -12,34 +14,30 @@ namespace BookingService.Controllers
     [Authorize]
     public class BookingsController : Controller
     {
+        private readonly IBookingRepository _bookingRepository;
         private readonly IIdentityService _identityService;
 
-        public BookingsController(IIdentityService identityService)
+        public BookingsController(IBookingRepository bookingRepository, IIdentityService identityService)
         {
+            _bookingRepository = bookingRepository;
             _identityService = identityService;            
         }
-
 
         [Route("checkout")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Checkout([FromBody]BookingCheckout bookingCheckout, [FromHeader(Name = "x-requestid")] string requestId)
+        public async Task<IActionResult> Checkout([FromBody]BookingCheckout bookingCheckout)
         {
             var userId = _identityService.GetUserIdentity();
-            bookingCheckout.RequestId = (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty) ?
-                guid : bookingCheckout.RequestId;
+            
+            //to do: check unique request id
 
-            if (bookingCheckout.RequestId != Guid.Empty)
-            {
-                //to do: check unique request id
+            var booking = new Booking(bookingCheckout.ProductId, bookingCheckout.ProductName, bookingCheckout.UnitPrice, bookingCheckout.Quantity);
 
-                var booking = new Booking(bookingCheckout.ProductId, bookingCheckout.ProductName, bookingCheckout.UnitPrice, bookingCheckout.Quantity);
+            _bookingRepository.Add(booking);
 
-                //_bookingRepository.Add(booking);
-
-                //await _bookingRepository.SaveChangesAsync();
-            }
+            await _bookingRepository.SaveChangesAsync();            
 
             return Accepted();
         }

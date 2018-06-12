@@ -4,7 +4,7 @@ namespace BookingService.Model
 {
     public class BookingCheckout
     {
-        public Guid RequestId { get; set; }
+        public string RequestId { get; set; }
 
         public int ProductId { get; set; }
 

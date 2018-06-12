@@ -12,8 +12,7 @@ namespace BookingService.Data.EntityConfigurations
 
             builder.HasKey(o => o.Id);
 
-            builder.Property(o => o.Id)
-                .HasDefaultValue(1)
+            builder.Property(o => o.Id)                
                 .ValueGeneratedNever()
                 .IsRequired();
 

@@ -33,7 +33,7 @@ namespace BookingService.Controllers
             
             //to do: check unique request id
 
-            var booking = new Booking(bookingCheckout.ProductId, bookingCheckout.ProductName, bookingCheckout.UnitPrice, bookingCheckout.Quantity);
+            var booking = new Booking(bookingCheckout.ProductId, bookingCheckout.ProductName, bookingCheckout.UnitPrice, bookingCheckout.Quantity, userId);
 
             _bookingRepository.Add(booking);
 

@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Npgsql;
 using Polly;
 
 namespace BookingService
@@ -72,12 +73,14 @@ namespace BookingService
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IIdentityService, IdentityService>();
 
-            var container = new ContainerBuilder();
-            container.Populate(services);
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Populate(services);
             
-            container.RegisterModule(new ApplicationModule());
+            containerBuilder.RegisterModule(new ApplicationModule());
 
-            return new AutofacServiceProvider(container.Build());
+            var container = RegisterEventBus(containerBuilder);
+
+            return new AutofacServiceProvider(container);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,6 +93,64 @@ namespace BookingService
             app.UseMvc();
 
             WaitForSqlAvailabilityAsync(loggerFactory, app, env).Wait();
+        }
+
+        IContainer RegisterEventBus(ContainerBuilder containerBuilder)
+        {
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            EnsurePostgreSqlDatabaseExistsAsync(connectionString).Wait();
+
+
+
+            var container = containerBuilder.Build();
+
+
+
+            return container;
+        }
+
+        async Task EnsurePostgreSqlDatabaseExistsAsync(string connectionString)
+        {
+            var retry = Policy.Handle<SocketException>()
+                         .WaitAndRetryAsync(new TimeSpan[]
+                         {
+                             TimeSpan.FromSeconds(5),
+                             TimeSpan.FromSeconds(10),
+                             TimeSpan.FromSeconds(15),
+                         });
+
+            await retry.ExecuteAsync(async () =>
+            {
+                var builder = new NpgsqlConnectionStringBuilder(connectionString);
+                var originalDatabase = builder.Database;
+
+                builder.Database = "postgres";
+                var masterConnectionString = builder.ConnectionString;
+
+                bool dbExists;
+                using (var connection = new NpgsqlConnection(masterConnectionString))
+                {
+                    await connection.OpenAsync();
+                    var command = connection.CreateCommand();
+                    command.CommandText = $"SELECT 1 FROM pg_catalog.pg_database WHERE datname = '{originalDatabase}'";
+
+                    var result = await command.ExecuteScalarAsync();
+
+                    dbExists = result != null;
+                }
+
+                if (!dbExists)
+                {
+                    using (var connection = new NpgsqlConnection(masterConnectionString))
+                    {
+                        await connection.OpenAsync();
+                        var command = connection.CreateCommand();
+                        command.CommandText = $@"CREATE DATABASE ""{originalDatabase}""";
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+            });
         }
 
         private async Task WaitForSqlAvailabilityAsync(ILoggerFactory loggerFactory, IApplicationBuilder app, IHostingEnvironment env, int retries = 0)

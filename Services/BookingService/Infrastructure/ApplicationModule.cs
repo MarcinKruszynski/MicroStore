@@ -16,10 +16,6 @@ namespace BookingService.Infrastructure
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<BuyerRepository>()
-                .As<IBuyerRepository>()
-                .InstancePerLifetimeScope();
-
             builder.RegisterType<BookingRepository>()
                 .As<IBookingRepository>()
                 .InstancePerLifetimeScope();

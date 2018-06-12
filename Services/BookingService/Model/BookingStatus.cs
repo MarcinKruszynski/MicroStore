@@ -11,7 +11,7 @@ namespace BookingService.Model
         public static BookingStatus CheckingAvailability = new BookingStatus(2, nameof(CheckingAvailability).ToLowerInvariant());
         public static BookingStatus StockConfirmed = new BookingStatus(3, nameof(StockConfirmed).ToLowerInvariant());
         public static BookingStatus Paid = new BookingStatus(4, nameof(Paid).ToLowerInvariant());        
-        public static BookingStatus Cancelled = new BookingStatus(6, nameof(Cancelled).ToLowerInvariant());
+        public static BookingStatus Cancelled = new BookingStatus(5, nameof(Cancelled).ToLowerInvariant());
 
         protected BookingStatus()
         {

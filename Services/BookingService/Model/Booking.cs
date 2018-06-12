@@ -8,7 +8,7 @@ namespace BookingService.Model
 
         private DateTime _date;
 
-        private int? _buyerId;
+        private string _userId;
 
         public BookingStatus Status { get; private set; }
         private int _statusId;
@@ -19,9 +19,9 @@ namespace BookingService.Model
         private decimal _unitPrice;
         private int _units;
 
-        public Booking(int productId, string productName, decimal unitPrice, int units = 1, int? buyerId = null)
+        public Booking(int productId, string productName, decimal unitPrice, int units = 1, string userId = null)
         {
-            _buyerId = buyerId;
+            _userId = userId;
             _statusId = BookingStatus.Submitted.Id;
             _date = DateTime.UtcNow;
 
@@ -30,12 +30,7 @@ namespace BookingService.Model
             _productName = productName;
             _unitPrice = unitPrice;            
             _units = units;
-        }
-
-        public void SetBuyerId(int id)
-        {
-            _buyerId = id;
-        }
+        }        
 
         public int GetUnits() => _units;        
 

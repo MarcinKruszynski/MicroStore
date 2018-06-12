@@ -13,14 +13,12 @@ namespace BookingService.Data
         }
 
         public DbSet<Booking> Bookings { get; set; }
-        public DbSet<BookingStatus> BookingStatus { get; set; }
-        public DbSet<Buyer> Buyers { get; set; }
+        public DbSet<BookingStatus> BookingStatus { get; set; }        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {            
             modelBuilder.ApplyConfiguration(new BookingEntityTypeConfiguration());            
-            modelBuilder.ApplyConfiguration(new BookingStatusEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new BuyerEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new BookingStatusEntityTypeConfiguration());            
         }        
     }
 }

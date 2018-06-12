@@ -9,18 +9,13 @@ namespace BookingService.Data.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Booking> builder)
         {
-            builder.ToTable("Bookings");            
+            builder.ToTable("bookings");            
 
             builder.HasKey(ci => ci.Id);
 
             builder.Property<DateTime>("Date").IsRequired();
-            builder.Property<int?>("BuyerId").IsRequired(false);
-            builder.Property<int>("StatusId").IsRequired();
-
-            builder.HasOne<Buyer>()
-                .WithMany()
-                .IsRequired(false)
-                .HasForeignKey("BuyerId");
+            builder.Property<string>("UserId").IsRequired(false);
+            builder.Property<int>("StatusId").IsRequired();            
 
             builder.HasOne(o => o.Status)
                 .WithMany()

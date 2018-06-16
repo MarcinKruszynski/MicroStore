@@ -43,7 +43,7 @@ namespace BookingService.Controllers
 
             await _bookingRepository.SaveChangesAsync();
 
-            var eventMessage = new BookingStartedIntegrationEvent(userId, 0, bookingCheckout.ProductId, bookingCheckout.Quantity);
+            var eventMessage = new BookingStartedIntegrationEvent(userId, booking.Id, bookingCheckout.ProductId, bookingCheckout.Quantity);
             await _endpoint.Publish(eventMessage);
 
             return Accepted();

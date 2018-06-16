@@ -61,11 +61,6 @@ namespace BookingService.Model
 
         public void SetCancelledStatus()
         {
-            if (_statusId == BookingStatus.Paid.Id)
-            {
-                throw new Exception($"Not possible to change booking status from {Status.Name} to {BookingStatus.Cancelled.Name}.");
-            }
-
             _statusId = BookingStatus.Cancelled.Id;            
         }
     }

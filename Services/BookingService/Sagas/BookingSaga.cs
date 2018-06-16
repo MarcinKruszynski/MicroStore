@@ -7,11 +7,19 @@ using System.Threading.Tasks;
 namespace BookingService.Sagas
 {
     public class BookingSaga : SqlSaga<BookingSagaData>,
-        IAmStartedByMessages<BookingStartedIntegrationEvent>
+        IAmStartedByMessages<BookingStartedIntegrationEvent>,
+        IHandleMessages<BookingStockConfirmedIntegrationEvent>,
+        IHandleMessages<BookingStockRejectedIntegrationEvent>,
+        IHandleMessages<BookingPaymentSuccededIntegrationEvent>,
+        IHandleMessages<BookingPaymentFailedIntegrationEvent>
     {
         protected override void ConfigureMapping(IMessagePropertyMapper mapper)
         {
             mapper.ConfigureMapping<BookingStartedIntegrationEvent>(_ => _.BookingId);
+            mapper.ConfigureMapping<BookingStockConfirmedIntegrationEvent>(_ => _.BookingId);
+            mapper.ConfigureMapping<BookingStockRejectedIntegrationEvent>(_ => _.BookingId);
+            mapper.ConfigureMapping<BookingPaymentSuccededIntegrationEvent>(_ => _.BookingId);
+            mapper.ConfigureMapping<BookingPaymentFailedIntegrationEvent>(_ => _.BookingId);
         }
 
         protected override string CorrelationPropertyName => nameof(BookingSagaData.BookingId);
@@ -21,10 +29,39 @@ namespace BookingService.Sagas
             Data.UserId = message.UserId;
 
             var bookingStockItem = new BookingStockItem(message.ProductId, message.Units);
-            var @event = new BookingStatusChangedToCheckingAvailabilityIntegrationEvent(message.BookingId, bookingStockItem);
+            var ev = new BookingStatusChangedToCheckingAvailabilityIntegrationEvent(message.BookingId, bookingStockItem);
 
-            await context.Publish(@event);            
-            
+            await context.Publish(ev);             
+        }
+
+        public async Task Handle(BookingStockConfirmedIntegrationEvent message, IMessageHandlerContext context)
+        {
+            Data.StockConfirmed = true;
+
+            var ev = new BookingStatusChangedToStockConfirmedIntegrationEvent(message.BookingId);
+
+            await context.Publish(ev);
+        }
+
+        public Task Handle(BookingStockRejectedIntegrationEvent message, IMessageHandlerContext context)
+        {
+            MarkAsComplete();
+
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(BookingPaymentSuccededIntegrationEvent message, IMessageHandlerContext context)
+        {
+            MarkAsComplete();
+
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(BookingPaymentFailedIntegrationEvent message, IMessageHandlerContext context)
+        {
+            MarkAsComplete();
+
+            return Task.CompletedTask;
         }
     }
 

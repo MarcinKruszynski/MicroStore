@@ -68,7 +68,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:DefaultConnection=Host=bookingdb;Database=bookingdb;Username=postgres;Password=password"
-      - IdentityUrl=http://identityservice 
+      - IdentityUrl=http://identityservice
+      - EventBusConnection=rabbitmq
+      - EventBusUserName=guest
+      - EventBusPassword=guest 
     ports:
       - "5102:80"
 

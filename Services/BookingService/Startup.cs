@@ -18,6 +18,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
+using NpgsqlTypes;
+using NServiceBus;
+using NServiceBus.Persistence.Sql;
 using Polly;
 
 namespace BookingService
@@ -101,11 +104,57 @@ namespace BookingService
 
             EnsurePostgreSqlDatabaseExistsAsync(connectionString).Wait();
 
-
+            IEndpointInstance endpoint = null;
+            containerBuilder.Register(c => endpoint)
+                .As<IEndpointInstance>()
+                .SingleInstance();
 
             var container = containerBuilder.Build();
 
+            var endpointConfiguration = new EndpointConfiguration("Booking");
 
+            // Configure RabbitMQ transport
+            var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
+            transport.UseConventionalRoutingTopology();
+            transport.ConnectionString(GetRabbitConnectionString());
+
+            // Configure persistence
+            var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+            var dialect = persistence.SqlDialect<SqlDialect.PostgreSql>();
+            dialect.JsonBParameterModifier(
+            modifier: parameter =>
+            {
+                var npgsqlParameter = (NpgsqlParameter)parameter;
+                npgsqlParameter.NpgsqlDbType = NpgsqlDbType.Jsonb;
+            });
+            persistence.ConnectionBuilder(connectionBuilder:
+                () => new NpgsqlConnection(connectionString));
+
+            // Use JSON.NET serializer
+            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
+
+            // Enable the Outbox.
+            endpointConfiguration.EnableOutbox();
+
+            // Make sure NServiceBus creates queues in RabbitMQ, tables in SQL Server, etc.
+            // You might want to turn this off in production, so that DevOps can use scripts to create these.
+            endpointConfiguration.EnableInstallers();
+
+            // Turn on auditing.
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
+
+            // Define conventions
+            var conventions = endpointConfiguration.Conventions();
+            conventions.DefiningEventsAs(c => c.Namespace != null && c.Name.EndsWith("IntegrationEvent"));
+
+            // Configure the DI container.
+            endpointConfiguration.UseContainer<AutofacBuilder>(customizations: customizations =>
+            {
+                customizations.ExistingLifetimeScope(container);
+            });
+
+            // Start the endpoint and register it with ASP.NET Core DI
+            endpoint = Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
 
             return container;
         }
@@ -151,6 +200,18 @@ namespace BookingService
                     }
                 }
             });
+        }
+
+        private string GetRabbitConnectionString()
+        {
+            var host = Configuration["EventBusConnection"];
+            var user = Configuration["EventBusUserName"];
+            var password = Configuration["EventBusPassword"];
+
+            if (string.IsNullOrEmpty(user))
+                return $"host={host}";
+
+            return $"host={host};username={user};password={password};";
         }
 
         private async Task WaitForSqlAvailabilityAsync(ILoggerFactory loggerFactory, IApplicationBuilder app, IHostingEnvironment env, int retries = 0)

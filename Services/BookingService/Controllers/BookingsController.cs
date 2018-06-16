@@ -7,6 +7,8 @@ using BookingService.Model;
 using BookingService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MicroStore.Services.IntegrationEvents.Events;
+using NServiceBus;
 
 namespace BookingService.Controllers
 {
@@ -16,11 +18,13 @@ namespace BookingService.Controllers
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly IIdentityService _identityService;
+        private readonly IEndpointInstance _endpoint;
 
-        public BookingsController(IBookingRepository bookingRepository, IIdentityService identityService)
+        public BookingsController(IBookingRepository bookingRepository, IIdentityService identityService, IEndpointInstance endpoint)
         {
             _bookingRepository = bookingRepository;
-            _identityService = identityService;            
+            _identityService = identityService;
+            _endpoint = endpoint;
         }
 
         [Route("checkout")]
@@ -37,7 +41,10 @@ namespace BookingService.Controllers
 
             _bookingRepository.Add(booking);
 
-            await _bookingRepository.SaveChangesAsync();            
+            await _bookingRepository.SaveChangesAsync();
+
+            var eventMessage = new BookingStartedIntegrationEvent(userId, 0, bookingCheckout.ProductId, bookingCheckout.Quantity);
+            await _endpoint.Publish(eventMessage);
 
             return Accepted();
         }

@@ -19,6 +19,10 @@ namespace BookingService.Model
         private decimal _unitPrice;
         private int _units;
 
+        public Booking()
+        {
+        }
+
         public Booking(int productId, string productName, decimal unitPrice, int units = 1, string userId = null)
         {
             _userId = userId;

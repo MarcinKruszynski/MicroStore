@@ -22,6 +22,8 @@ using NpgsqlTypes;
 using NServiceBus;
 using NServiceBus.Persistence.Sql;
 using Polly;
+using RabbitMQ.Client;
+using RabbitMQ.Common;
 
 namespace BookingService
 {
@@ -81,7 +83,7 @@ namespace BookingService
             
             containerBuilder.RegisterModule(new ApplicationModule());
 
-            var container = RegisterEventBus(containerBuilder);
+            var container = RegisterEventBus(containerBuilder, services);
 
             return new AutofacServiceProvider(container);
         }
@@ -98,11 +100,13 @@ namespace BookingService
             WaitForSqlAvailabilityAsync(loggerFactory, app, env).Wait();
         }
 
-        IContainer RegisterEventBus(ContainerBuilder containerBuilder)
+        IContainer RegisterEventBus(ContainerBuilder containerBuilder, IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             EnsurePostgreSqlDatabaseExistsAsync(connectionString).Wait();
+
+            EnsureRabbitConnectionExists(services);
 
             IEndpointInstance endpoint = null;
             containerBuilder.Register(c => endpoint)
@@ -200,6 +204,42 @@ namespace BookingService
                     }
                 }
             });
+        }
+
+        void EnsureRabbitConnectionExists(IServiceCollection services)
+        {
+            var factory = new ConnectionFactory()
+            {
+                HostName = Configuration["EventBusConnection"]
+            };
+
+            if (!string.IsNullOrEmpty(Configuration["EventBusUserName"]))
+            {
+                factory.UserName = Configuration["EventBusUserName"];
+            }
+
+            if (!string.IsNullOrEmpty(Configuration["EventBusPassword"]))
+            {
+                factory.Password = Configuration["EventBusPassword"];
+            }
+
+            var retryCount = 5;
+
+            var scopeFactory = services
+                    .BuildServiceProvider()
+                    .GetRequiredService<IServiceScopeFactory>();
+
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var provider = scope.ServiceProvider;
+
+                var logger = provider.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+
+                using (var persistentConnection = new DefaultRabbitMQPersistentConnection(factory, logger, retryCount))
+                {
+                    persistentConnection.TryConnect();
+                }
+            }
         }
 
         private string GetRabbitConnectionString()

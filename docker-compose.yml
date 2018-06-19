@@ -50,12 +50,12 @@ services:
 
   paymentservice:
     image: paymentservice
-      build:
-        context: .
-        dockerfile: Services/PaymentService/Dockerfile
-      depends_on:
-       - paymentdb
-       - rabbitmq
+    build:
+      context: .
+      dockerfile: Services/PaymentService/Dockerfile
+    depends_on:
+     - paymentdb
+     - rabbitmq
 
   webapp:
     image: webapp

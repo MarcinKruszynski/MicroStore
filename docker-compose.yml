@@ -10,6 +10,9 @@ services:
   bookingdb:
     image: postgres
 
+  paymentdb:
+    image: postgres
+
   rabbitmq:
     image: rabbitmq:3.7.5-management-alpine
     
@@ -45,6 +48,15 @@ services:
      - bookingdb
      - rabbitmq
 
+  paymentservice:
+    image: paymentservice
+      build:
+        context: .
+        dockerfile: Services/PaymentService/Dockerfile
+      depends_on:
+       - paymentdb
+       - rabbitmq
+
   webapp:
     image: webapp
     build:
@@ -54,3 +66,5 @@ services:
       - identityservice
       - productservice
       - bookingservice
+  
+

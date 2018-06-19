@@ -28,6 +28,15 @@ services:
     ports:
       - "5435:5432" 
 
+  paymentdb:
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password 
+    volumes:
+      - postgres-payment-data-volume:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+
   rabbitmq:
     ports:
       - "15672:15672"
@@ -75,6 +84,16 @@ services:
     ports:
       - "5102:80"
 
+  paymentservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DefaultConnection=Host=paymentdb;Database=paymentdb;Username=postgres;Password=password"      
+      - EventBusConnection=rabbitmq
+      - EventBusUserName=guest
+      - EventBusPassword=guest 
+    ports:
+      - "5103:80"
+
   webapp:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -87,3 +106,4 @@ volumes:
   postgres-identity-data-volume:
   postgres-product-data-volume:
   postgres-booking-data-volume:
+  postgres-payment-data-volume:

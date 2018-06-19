@@ -41,7 +41,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService", "Services
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingService", "Services\BookingService\BookingService.csproj", "{872738FC-679A-4923-978D-666D77EAEB53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQ.Common", "Common\RabbitMQ.Common\RabbitMQ.Common.csproj", "{0AA40E7E-FCB8-474D-A57E-9862334F6FB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQ.Common", "Common\RabbitMQ.Common\RabbitMQ.Common.csproj", "{0AA40E7E-FCB8-474D-A57E-9862334F6FB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService", "Services\PaymentService\PaymentService.csproj", "{57853DBA-DCA5-4510-922A-24D23012F62A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{0AA40E7E-FCB8-474D-A57E-9862334F6FB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AA40E7E-FCB8-474D-A57E-9862334F6FB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AA40E7E-FCB8-474D-A57E-9862334F6FB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57853DBA-DCA5-4510-922A-24D23012F62A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57853DBA-DCA5-4510-922A-24D23012F62A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57853DBA-DCA5-4510-922A-24D23012F62A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57853DBA-DCA5-4510-922A-24D23012F62A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{25A133C9-6DD3-4571-B8C7-B8B54CEF00D1} = {FCFD60BF-475F-48F7-951F-BE0BEEC13324}
 		{872738FC-679A-4923-978D-666D77EAEB53} = {FCFD60BF-475F-48F7-951F-BE0BEEC13324}
 		{0AA40E7E-FCB8-474D-A57E-9862334F6FB5} = {D1691AC2-16E7-4B93-B89F-C1C08931A942}
+		{57853DBA-DCA5-4510-922A-24D23012F62A} = {FCFD60BF-475F-48F7-951F-BE0BEEC13324}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E56F6426-E8C9-453E-8798-4C4554B2E740}

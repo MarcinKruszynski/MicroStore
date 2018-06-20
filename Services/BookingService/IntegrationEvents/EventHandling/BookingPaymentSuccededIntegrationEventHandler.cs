@@ -22,6 +22,9 @@ namespace BookingService.IntegrationEvents.EventHandling
             booking.SetPaidStatus();
 
             await _bookingRepository.SaveChangesAsync();
+
+            var ev = new BookingStatusChangedToPaidIntegrationEvent(message.BookingId, new BookingStockItem(booking.ProductId, booking.GetUnits()));
+            await context.Publish(ev);
         }
     }
 }

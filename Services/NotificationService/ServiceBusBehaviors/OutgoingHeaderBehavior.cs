@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using NServiceBus.Features;
 using NServiceBus.Pipeline;
 
-namespace PaymentService.ServiceBusBehaviors
+namespace NotificationService.ServiceBusBehaviors
 {
     public class OutgoingHeaderBehavior : Behavior<IOutgoingPhysicalMessageContext>
     {

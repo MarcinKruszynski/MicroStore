@@ -13,6 +13,9 @@ services:
   paymentdb:
     image: postgres
 
+  notificationdb:
+    image: postgres
+
   rabbitmq:
     image: rabbitmq:3.7.5-management-alpine
     
@@ -55,6 +58,15 @@ services:
       dockerfile: Services/PaymentService/Dockerfile
     depends_on:
      - paymentdb
+     - rabbitmq
+
+  notificationservice:
+    image: notificationservice
+    build:
+      context: .
+      dockerfile: Services/NotificationService/Dockerfile
+    depends_on:
+     - notificationdb
      - rabbitmq
 
   webapp:

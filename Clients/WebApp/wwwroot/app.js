@@ -1,5 +1,74 @@
 ﻿/// <reference path="oidc-client.js" />
 
+var pubKey = 'BEoYccO5q2KhdfX1Wt0U4tpWzZBRa4FGImrvzXqu073QmO2V7r3aGv0MOf-BizbWX5V3H65ns3p7uZ07DMMrjvk';
+// wD97u6MzPoW77gtRmOiu0gpNON7wE9zEJIOXyGizO2c
+
+var notifyBtn = document.getElementById("notify");
+notifyBtn.disabled = true;
+
+let isSubscribed = false;
+let swRegistration = null;
+
+function urlB64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+    if (Notification.permission !== 'denied') {
+        notifyBtn.disabled = false;
+    }
+
+    navigator.serviceWorker.register('sw.js').then(swReg => { 
+        swRegistration = swReg;
+
+        swRegistration.pushManager.getSubscription()
+            .then(subscription => {
+                isSubscribed = !(subscription === null);                
+            });
+    });
+}
+
+notifyBtn.addEventListener('click', function (evt) {
+    this.disabled = true;
+
+    swRegistration.pushManager.getSubscription().then(s => {
+        if (s !== null) {
+            s.unsubscribe();
+
+            this.disabled = false;
+        } else {
+            swRegistration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlB64ToUint8Array(pubKey)
+            })
+            .then(s => fetch('api/subscription', {
+                headers: { 'Content-Type': 'application/json' },
+                method: 'POST',
+                credentials: 'same-origin',
+                body: JSON.stringify(s)
+            }))
+            .then(res => {
+                this.disabled = false;
+            });
+        }
+    });
+});
+
+
+
+
+
 function log() {
     document.getElementById('results').innerText = '';
 

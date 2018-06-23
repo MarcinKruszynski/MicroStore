@@ -33,9 +33,21 @@ namespace NotificationService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvcCore()                
+            services.AddMvcCore()
+                .AddAuthorization()
                 .AddJsonFormatters()
                 .AddControllersAsServices();
+
+            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
+
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = identityUrl;
+                    options.RequireHttpsMetadata = false;
+
+                    options.ApiName = "notification";
+                });
 
             services.AddCors(options =>
             {
@@ -57,7 +69,9 @@ namespace NotificationService
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseCors("CorsPolicy");            
+            app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
 
             app.UseMvc();
         }

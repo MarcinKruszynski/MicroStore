@@ -33,9 +33,9 @@ namespace NotificationService.IntegrationEvents.EventHandling
             var payload = JsonConvert.SerializeObject(
                 new
                 {
-                    bookingId = message.BookingId,
-                    productId = message.BookingStockItem.ProductId,
-                    quantity = message.BookingStockItem.Quantity
+                    bookingId = message.BookingId,                    
+                    productName = message.ProductName,
+                    quantity = message.Quantity
                 }
             );
 

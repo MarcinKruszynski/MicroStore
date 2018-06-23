@@ -40,7 +40,7 @@ namespace BookingService.Model
 
         public decimal GetUnitPrice() => _unitPrice;        
 
-        public string GetOrderItemProductName() => _productName;
+        public string GetProductName() => _productName;
 
 
         public void SetCheckingAvailability()

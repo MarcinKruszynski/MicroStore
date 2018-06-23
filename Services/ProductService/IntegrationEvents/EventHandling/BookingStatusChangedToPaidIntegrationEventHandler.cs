@@ -16,11 +16,10 @@ namespace ProductService.IntegrationEvents.EventHandling
         }
 
         public async Task Handle(BookingStatusChangedToPaidIntegrationEvent message, IMessageHandlerContext context)
-        {
-            var bookingStockItem = message.BookingStockItem;
-            var productItem = _productContext.ProductItems.Find(bookingStockItem.ProductId);
+        {            
+            var productItem = _productContext.ProductItems.Find(message.ProductId);
 
-            productItem.RemoveStock(bookingStockItem.Quantity);            
+            productItem.RemoveStock(message.Quantity);            
 
             await _productContext.SaveChangesAsync();
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NotificationService.Models;
 using System.Net;
@@ -7,6 +8,7 @@ using WebPush;
 namespace NotificationService.Controllers
 {    
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class NotificationsController : Controller
     {
         //test
@@ -24,7 +26,7 @@ namespace NotificationService.Controllers
                 new
                 {
                     bookingId = 1,
-                    productId = 2,
+                    productName = "Progressive apps - 31.06.2018",
                     quantity = 1
                 }
             );

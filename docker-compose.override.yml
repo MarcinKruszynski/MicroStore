@@ -106,7 +106,8 @@ services:
   notificationservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:DefaultConnection=Host=notificationdb;Database=notificationdb;Username=postgres;Password=password"      
+      - "ConnectionStrings:DefaultConnection=Host=notificationdb;Database=notificationdb;Username=postgres;Password=password" 
+      - IdentityUrl=http://identityservice
       - EventBusConnection=rabbitmq
       - EventBusUserName=guest
       - EventBusPassword=guest 

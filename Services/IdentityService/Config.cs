@@ -25,7 +25,8 @@ namespace IdentityService
             return new List<ApiResource>
             {
                 new ApiResource("products", "Products Service"),
-                new ApiResource("booking", "Booking Service")
+                new ApiResource("booking", "Booking Service"),
+                new ApiResource("notification", "Notification Service")
             };
         }
 
@@ -51,7 +52,8 @@ namespace IdentityService
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "products",
-                        "booking"
+                        "booking",
+                        "notification"
                     },
                 }
             };

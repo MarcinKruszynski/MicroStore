@@ -53,27 +53,37 @@ notifyBtn.addEventListener('click', function (evt) {
                 applicationServerKey: urlB64ToUint8Array(pubKey)
             })
             .then(s => {
-                //fetch('api/subscription', {
-                //    headers: { 'Content-Type': 'application/json' },
-                //    method: 'POST',
-                //    body: JSON.stringify(s)
-                //});
+                if (mgr)
+                    mgr.getUser().then(function (user) {
+                        var url = "http://localhost:5200/api/v1/n/notifications";
 
-                //test
-                var el = document.getElementById("test"), elClone = el.cloneNode(true);
-                el.parentNode.replaceChild(elClone, el);
+                        //fetch(url, {
+                        //    method: 'post',
+                        //    headers: {
+                        //        'Content-type': 'application/json',
+                        //        'Authorization': 'Bearer ' + user.access_token
+                        //    },
+                        //    body: JSON.stringify(s)
+                        //});
 
-                var testBtn = document.getElementById("test");
+                        //test
+                        var el = document.getElementById("test"), elClone = el.cloneNode(true);
+                        el.parentNode.replaceChild(elClone, el);
 
-                testBtn.addEventListener('click', function () {
-                    fetch('http://localhost:5104/api/v1/notifications', {
-                        method: 'post',
-                        headers: {
-                            'Content-type': 'application/json'
-                        },
-                        body: JSON.stringify(s)
-                    });
-                });
+                        var testBtn = document.getElementById("test");
+
+                        testBtn.addEventListener('click', function () {
+                            fetch(url, {
+                                method: 'post',
+                                headers: {
+                                    'Content-type': 'application/json',
+                                    'Authorization': 'Bearer ' + user.access_token
+                                },
+                                body: JSON.stringify(s)
+                            });
+                        });
+                            
+                    })                                    
             })
             .then(res => {
                 this.disabled = false;
@@ -150,7 +160,7 @@ var config = {
     client_id: "spa",
     redirect_uri: "http://localhost:5100/callback.html",
     response_type: "id_token token",
-    scope: "openid profile products booking",
+    scope: "openid profile products booking notification",
     post_logout_redirect_uri: "http://localhost:5100/index.html",
 };
 var mgr = new Oidc.UserManager(config);

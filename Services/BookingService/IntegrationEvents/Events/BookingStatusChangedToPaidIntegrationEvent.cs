@@ -3,13 +3,17 @@
     public class BookingStatusChangedToPaidIntegrationEvent
     {
         public int BookingId { get; set; }
-        public BookingStockItem BookingStockItem { get; set; }
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public int Quantity { get; set; }
 
         public BookingStatusChangedToPaidIntegrationEvent(
-            int bookingId, BookingStockItem bookingStockItem)
+            int bookingId, int productId, string productName, int quantity)
         {
             BookingId = bookingId;
-            BookingStockItem = bookingStockItem;
+            ProductId = productId;
+            ProductName = productName;
+            Quantity = quantity;
         }
     }
 }

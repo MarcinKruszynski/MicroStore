@@ -52,12 +52,29 @@ notifyBtn.addEventListener('click', function (evt) {
                 userVisibleOnly: true,
                 applicationServerKey: urlB64ToUint8Array(pubKey)
             })
-            .then(s => fetch('api/subscription', {
-                headers: { 'Content-Type': 'application/json' },
-                method: 'POST',
-                credentials: 'same-origin',
-                body: JSON.stringify(s)
-            }))
+            .then(s => {
+                //fetch('api/subscription', {
+                //    headers: { 'Content-Type': 'application/json' },
+                //    method: 'POST',
+                //    body: JSON.stringify(s)
+                //});
+
+                //test
+                var el = document.getElementById("test"), elClone = el.cloneNode(true);
+                el.parentNode.replaceChild(elClone, el);
+
+                var testBtn = document.getElementById("test");
+
+                testBtn.addEventListener('click', function () {
+                    fetch('http://localhost:5104/api/v1/notifications', {
+                        method: 'post',
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify(s)
+                    });
+                });
+            })
             .then(res => {
                 this.disabled = false;
             });

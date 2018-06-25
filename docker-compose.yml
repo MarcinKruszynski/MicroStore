@@ -16,6 +16,9 @@ services:
   notificationdb:
     image: postgres
 
+  notificationnosqldb:
+    image: mongo
+
   rabbitmq:
     image: rabbitmq:3.7.5-management-alpine
     
@@ -66,6 +69,7 @@ services:
       context: .
       dockerfile: Services/NotificationService/Dockerfile
     depends_on:
+     - notificationnosqldb
      - notificationdb
      - rabbitmq
 

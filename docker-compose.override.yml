@@ -46,6 +46,10 @@ services:
     ports:
       - "5437:5432"
 
+  notificationnosqldb:
+    ports:
+      - "27017:27017"
+
   rabbitmq:
     ports:
       - "15672:15672"
@@ -106,7 +110,9 @@ services:
   notificationservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:DefaultConnection=Host=notificationdb;Database=notificationdb;Username=postgres;Password=password" 
+      - "ConnectionStrings:DefaultConnection=Host=notificationdb;Database=notificationdb;Username=postgres;Password=password"
+      - MongoConnectionString=mongodb://notificationnosqldb     
+      - MongoDatabase=PushSubscriptionDb
       - IdentityUrl=http://identityservice
       - EventBusConnection=rabbitmq
       - EventBusUserName=guest

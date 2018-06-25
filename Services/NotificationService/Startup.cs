@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NotificationService.Infrastructure;
 using Npgsql;
 using NpgsqlTypes;
 using NServiceBus;
@@ -38,6 +39,8 @@ namespace NotificationService
                 .AddJsonFormatters()
                 .AddControllersAsServices();
 
+            services.Configure<MongoSettings>(Configuration);
+
             var identityUrl = Configuration.GetValue<string>("IdentityUrl");
 
             services.AddAuthentication("Bearer")
@@ -60,6 +63,8 @@ namespace NotificationService
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(services);
+
+            containerBuilder.RegisterModule(new ApplicationModule());
 
             var container = RegisterEventBus(containerBuilder, services);
 

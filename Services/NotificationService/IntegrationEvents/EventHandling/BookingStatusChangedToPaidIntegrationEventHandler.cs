@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using MicroStore.Services.IntegrationEvents.Events;
 using Newtonsoft.Json;
-using NotificationService.Models;
+using NotificationService.Interfaces;
 using NServiceBus;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebPush;
@@ -14,13 +13,15 @@ namespace NotificationService.IntegrationEvents.EventHandling
         IHandleMessages<BookingStatusChangedToPaidIntegrationEvent>
     {
         private readonly ILogger _logger;
+        private readonly IPushSubscriptionRepository _subscriptionRepository;
 
-        public BookingStatusChangedToPaidIntegrationEventHandler(ILogger<BookingStatusChangedToPaidIntegrationEventHandler> logger)
+        public BookingStatusChangedToPaidIntegrationEventHandler(ILogger<BookingStatusChangedToPaidIntegrationEventHandler> logger, IPushSubscriptionRepository subscriptionRepository)
         {
             _logger = logger;
+            _subscriptionRepository = subscriptionRepository;
         }
 
-        public Task Handle(BookingStatusChangedToPaidIntegrationEvent message, IMessageHandlerContext context)
+        public async Task Handle(BookingStatusChangedToPaidIntegrationEvent message, IMessageHandlerContext context)
         {
             var vapidDetails = new VapidDetails(
                     @"mailto:pop365@outlook.com",
@@ -28,7 +29,7 @@ namespace NotificationService.IntegrationEvents.EventHandling
                     "wD97u6MzPoW77gtRmOiu0gpNON7wE9zEJIOXyGizO2c"
                 );
 
-            var subscriptions = new List<Models.PushSubscription>(); //await Database.GetPushSubscriptions();
+            var subscriptions = await _subscriptionRepository.GetSubscriptionListAsync();
 
             var payload = JsonConvert.SerializeObject(
                 new
@@ -41,7 +42,7 @@ namespace NotificationService.IntegrationEvents.EventHandling
 
             var webPushClient = new WebPushClient();
 
-            foreach(var subscription in subscriptions.Select(s => new WebPush.PushSubscription(s.Endpoint, s.Keys["p256dh"], s.Keys["auth"])))
+            foreach(var subscription in subscriptions.Select(s => new WebPush.PushSubscription(s.Endpoint, s.P256DH, s.Auth)))
             {
                 try
                 {
@@ -54,8 +55,6 @@ namespace NotificationService.IntegrationEvents.EventHandling
                     //to do
                 }                
             }            
-
-            return Task.CompletedTask;
         }
     }    
 }

@@ -14,6 +14,8 @@ Sample ASP.NET Core microservice app using:
 - RabbitMQ
 - Autofac
 - NServiceBus
+- MongoDB
+- WebPush
 
 To be continued
 

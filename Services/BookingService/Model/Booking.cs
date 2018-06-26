@@ -34,7 +34,9 @@ namespace BookingService.Model
             _productName = productName;
             _unitPrice = unitPrice;            
             _units = units;
-        }        
+        }
+
+        public string GetUserId() => _userId;
 
         public int GetUnits() => _units;        
 

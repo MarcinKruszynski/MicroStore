@@ -29,7 +29,7 @@ namespace NotificationService.IntegrationEvents.EventHandling
                     "wD97u6MzPoW77gtRmOiu0gpNON7wE9zEJIOXyGizO2c"
                 );
 
-            var subscriptions = await _subscriptionRepository.GetSubscriptionListAsync();
+            var subscriptions = await _subscriptionRepository.GetSubscriptionListAsync(message.UserId);
 
             var payload = JsonConvert.SerializeObject(
                 new

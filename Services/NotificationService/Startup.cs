@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using NotificationService.Infrastructure;
+using NotificationService.Interfaces;
+using NotificationService.Repositories;
+using NotificationService.Services;
 using Npgsql;
 using NpgsqlTypes;
 using NServiceBus;
@@ -61,10 +61,12 @@ namespace NotificationService
                     .AllowCredentials());
             });
 
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.Populate(services);
+            services.AddTransient<IPushSubscriptionRepository, PushSubscriptionRepository>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IIdentityService, IdentityService>();
 
-            containerBuilder.RegisterModule(new ApplicationModule());
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Populate(services);            
 
             var container = RegisterEventBus(containerBuilder, services);
 

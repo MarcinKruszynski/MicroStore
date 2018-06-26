@@ -47,6 +47,9 @@ services:
       - "5437:5432"
 
   notificationnosqldb:
+    restart: always
+    volumes:
+      - postgres-notificationnosql-data-volume:/data/db
     ports:
       - "27017:27017"
 
@@ -134,3 +137,4 @@ volumes:
   postgres-booking-data-volume:
   postgres-payment-data-volume:
   postgres-notification-data-volume:
+  postgres-notificationnosql-data-volume:

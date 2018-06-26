@@ -9,6 +9,8 @@ namespace NotificationService.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        public string UserId { get; set; }
+
         public string Endpoint { get; set; }
 
         public string P256DH { get; set; }

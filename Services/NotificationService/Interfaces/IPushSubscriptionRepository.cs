@@ -8,6 +8,6 @@ namespace NotificationService.Interfaces
     {
         Task AddSubscriptionAsync(PushSubscription subscription);
 
-        Task<List<PushSubscription>> GetSubscriptionListAsync();
+        Task<List<PushSubscription>> GetSubscriptionListAsync(string userId);
     }
 }

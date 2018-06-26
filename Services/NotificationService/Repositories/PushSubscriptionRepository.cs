@@ -23,9 +23,11 @@ namespace NotificationService.Repositories
             await _context.PushSubscriptions.InsertOneAsync(subscription);
         }
 
-        public async Task<List<PushSubscription>> GetSubscriptionListAsync()
+        public async Task<List<PushSubscription>> GetSubscriptionListAsync(string userId)
         {
-            return await _context.PushSubscriptions.Find(new BsonDocument()).ToListAsync();
+            var filter = Builders<PushSubscription>.Filter.Eq("UserId", userId);
+
+            return await _context.PushSubscriptions.Find(filter).ToListAsync();
         }
     }
 }

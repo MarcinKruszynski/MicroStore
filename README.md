@@ -16,6 +16,7 @@ Sample ASP.NET Core microservice app using:
 - NServiceBus
 - MongoDB
 - WebPush
+- Swagger
 
 To be continued
 

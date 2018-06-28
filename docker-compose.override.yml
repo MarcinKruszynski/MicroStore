@@ -64,6 +64,7 @@ services:
       - "ConnectionStrings:DefaultConnection=Host=identitydb;Database=identitydb;Username=postgres;Password=password" 
       - IdentityUrl=http://identityservice 
       - SpaClient=http://${EXTERNAL_DNS_NAME_OR_IP}:5100
+      - ProductsClient=http://${EXTERNAL_DNS_NAME_OR_IP}:5101
     ports:
       - "5201:80"
     volumes:
@@ -83,6 +84,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:DefaultConnection=Host=productdb;Database=productdb;Username=postgres;Password=password"
       - IdentityUrl=http://identityservice 
+      - IdentityUrlExternal=http://${EXTERNAL_DNS_NAME_OR_IP}:5201
       - EventBusConnection=rabbitmq
       - EventBusUserName=guest
       - EventBusPassword=guest  

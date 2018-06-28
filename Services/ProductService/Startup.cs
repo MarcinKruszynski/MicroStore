@@ -18,6 +18,9 @@ using Polly;
 using System.Net.Sockets;
 using RabbitMQ.Common;
 using RabbitMQ.Client;
+using System.Collections.Generic;
+using Swashbuckle.AspNetCore.Swagger;
+using ProductService.Infrastructure.Filters;
 
 namespace ProductService
 {
@@ -47,9 +50,7 @@ namespace ProductService
                     ServiceLifetime.Scoped);
 
 
-            services.AddMvcCore()
-                .AddAuthorization()
-                .AddJsonFormatters()
+            services.AddMvc()
                 .AddControllersAsServices();
 
             var identityUrl = Configuration.GetValue<string>("IdentityUrl");
@@ -62,6 +63,32 @@ namespace ProductService
 
                     options.ApiName = "products";
                 });
+
+            services.AddSwaggerGen(options =>
+            {
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Title = "MicroStore - Products HTTP API",
+                    Version = "v1",
+                    Description = "The Products Microservice HTTP API.",
+                    TermsOfService = "Terms Of Service"
+                });
+
+                options.AddSecurityDefinition("oauth2", new OAuth2Scheme
+                {
+                    Type = "oauth2",
+                    Flow = "implicit",
+                    AuthorizationUrl = $"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/authorize",
+                    TokenUrl = $"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/token",
+                    Scopes = new Dictionary<string, string>()
+                    {
+                        { "products", "Products API" }
+                    }
+                });
+
+                options.OperationFilter<AuthorizeCheckOperationFilter>();
+            });
 
             services.AddCors(options =>
             {
@@ -89,7 +116,15 @@ namespace ProductService
 
             app.UseAuthentication();
 
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
+
+            app.UseSwagger()
+              .UseSwaggerUI(c =>
+              {
+                  c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductService V1");                  
+                  c.OAuthClientId("productsswaggerui");
+                  c.OAuthAppName("Products Swagger UI");
+              });
 
             WaitForSqlAvailabilityAsync(loggerFactory, app, env).Wait();
         }

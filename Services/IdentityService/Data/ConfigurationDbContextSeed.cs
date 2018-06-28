@@ -14,6 +14,7 @@ namespace IdentityService.Data
         {
             var clientUrls = new Dictionary<string, string>();
             clientUrls.Add("Spa", configuration.GetValue<string>("SpaClient"));
+            clientUrls.Add("Products", configuration.GetValue<string>("ProductsClient"));
 
             if (!context.Clients.Any())
             {

@@ -55,7 +55,22 @@ namespace IdentityService
                         "booking",
                         "notification"
                     },
-                }
+                },
+                new Client
+                {
+                    ClientId = "productsswaggerui",
+                    ClientName = "Products Swagger UI",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+
+                    RedirectUris = { $"{clientsUrl["Products"]}/swagger/oauth2-redirect.html" },
+                    PostLogoutRedirectUris = { $"{clientsUrl["Products"]}/swagger/" },
+
+                    AllowedScopes =
+                    {
+                        "products"
+                    }
+                },
             };
         }
     }

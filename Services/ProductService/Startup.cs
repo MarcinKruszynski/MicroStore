@@ -37,6 +37,9 @@ namespace ProductService
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc()
+                .AddControllersAsServices();
+
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
@@ -47,22 +50,7 @@ namespace ProductService
                         sql.MigrationsAssembly(migrationsAssembly);
                         sql.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
                     }),
-                    ServiceLifetime.Scoped);
-
-
-            services.AddMvc()
-                .AddControllersAsServices();
-
-            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
-
-            services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication(options =>
-                {
-                    options.Authority = identityUrl;
-                    options.RequireHttpsMetadata = false;
-
-                    options.ApiName = "products";
-                });
+                    ServiceLifetime.Scoped);            
 
             services.AddSwaggerGen(options =>
             {
@@ -99,6 +87,18 @@ namespace ProductService
                     .AllowCredentials());
             });
 
+            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
+
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = identityUrl;
+                    options.RequireHttpsMetadata = false;
+
+                    options.ApiName = "products";
+                });
+
+            services.AddOptions();
 
             var containerBuilder = new ContainerBuilder();
 
@@ -124,7 +124,7 @@ namespace ProductService
                   c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductService V1");                  
                   c.OAuthClientId("productsswaggerui");
                   c.OAuthAppName("Products Swagger UI");
-              });
+              });            
 
             WaitForSqlAvailabilityAsync(loggerFactory, app, env).Wait();
         }

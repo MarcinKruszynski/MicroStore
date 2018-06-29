@@ -24,6 +24,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\WebHost.Common\WebHost.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\" />
   </ItemGroup> 
   
 

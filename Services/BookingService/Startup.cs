@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -8,6 +7,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BookingService.Data;
 using BookingService.Infrastructure;
+using BookingService.Infrastructure.Filters;
 using BookingService.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Npgsql;
 using NpgsqlTypes;
 using NServiceBus;
@@ -24,6 +23,7 @@ using NServiceBus.Persistence.Sql;
 using Polly;
 using RabbitMQ.Client;
 using RabbitMQ.Common;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace BookingService
 {
@@ -39,6 +39,9 @@ namespace BookingService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc()
+                .AddControllersAsServices();
+
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
@@ -50,10 +53,40 @@ namespace BookingService
                         sql.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
                     }));
 
-            services.AddMvcCore()
-                .AddAuthorization()
-                .AddJsonFormatters()
-                .AddControllersAsServices();
+            services.AddSwaggerGen(options =>
+            {
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Title = "MicroStore - Booking HTTP API",
+                    Version = "v1",
+                    Description = "The Booking Microservice HTTP API.",
+                    TermsOfService = "Terms Of Service"
+                });
+
+                options.AddSecurityDefinition("oauth2", new OAuth2Scheme
+                {
+                    Type = "oauth2",
+                    Flow = "implicit",
+                    AuthorizationUrl = $"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/authorize",
+                    TokenUrl = $"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/token",
+                    Scopes = new Dictionary<string, string>()
+                    {
+                        { "booking", "Booking API" }
+                    }
+                });
+
+                options.OperationFilter<AuthorizeCheckOperationFilter>();
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
 
             var identityUrl = Configuration.GetValue<string>("IdentityUrl");
 
@@ -66,14 +99,7 @@ namespace BookingService
                     options.ApiName = "booking";
                 });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });
+            services.AddOptions();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IIdentityService, IdentityService>();
@@ -95,7 +121,15 @@ namespace BookingService
 
             app.UseAuthentication();
 
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
+
+            app.UseSwagger()
+              .UseSwaggerUI(c =>
+              {
+                  c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookingService V1");
+                  c.OAuthClientId("bookingswaggerui");
+                  c.OAuthAppName("Booking Swagger UI");
+              });
 
             WaitForSqlAvailabilityAsync(loggerFactory, app, env).Wait();
         }

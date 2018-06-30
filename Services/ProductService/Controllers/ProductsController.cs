@@ -14,6 +14,7 @@ namespace ProductService.Controllers
 {
     [Route("api/v1/[controller]")]
     [Authorize]
+    [ApiController]
     public class ProductsController: Controller
     {
         private readonly IEndpointInstance _endpoint;

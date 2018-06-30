@@ -50,7 +50,7 @@ namespace BookingService
                     sql =>
                     {
                         sql.MigrationsAssembly(migrationsAssembly);
-                        sql.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
+                        sql.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
                     }));
 
             services.AddSwaggerGen(options =>

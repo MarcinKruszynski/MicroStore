@@ -35,6 +35,17 @@ services:
     build:
       context: .
       dockerfile: ApiGateways/ApiGateway/Dockerfile
+    depends_on:
+     - identitydb
+     - productdb
+     - bookingdb
+     - notificationdb
+     - notificationnosqldb
+     - identityservice
+     - rabbitmq
+     - productservice
+     - bookingservice
+     - notificationservice
 
   productservice:
     image: productservice
@@ -78,9 +89,3 @@ services:
     build:
       context: .
       dockerfile: Clients/WebApp/Dockerfile
-    depends_on:
-      - identityservice
-      - productservice
-      - bookingservice
-  
-

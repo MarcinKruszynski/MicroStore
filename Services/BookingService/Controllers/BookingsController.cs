@@ -14,6 +14,7 @@ namespace BookingService.Controllers
 {
     [Route("api/v1/[controller]")]
     [Authorize]
+    [ApiController]
     public class BookingsController : Controller
     {
         private readonly IBookingRepository _bookingRepository;

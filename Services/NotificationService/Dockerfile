@@ -1,18 +1,19 @@
 FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 64969
+EXPOSE 44383
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY MicroStore.sln ./
 COPY Services/NotificationService/NotificationService.csproj Services/NotificationService/
-RUN dotnet restore -nowarn:msb3202,nu1503
+COPY Common/RabbitMQ.Common/RabbitMQ.Common.csproj Common/RabbitMQ.Common/
+RUN dotnet restore Services/NotificationService/NotificationService.csproj
 COPY . .
 WORKDIR /src/Services/NotificationService
-RUN dotnet build -c Release -o /app
+RUN dotnet build NotificationService.csproj -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish -c Release -o /app
+RUN dotnet publish NotificationService.csproj -c Release -o /app
 
 FROM base AS final
 WORKDIR /app

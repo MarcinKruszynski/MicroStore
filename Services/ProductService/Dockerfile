@@ -1,18 +1,19 @@
 FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 64969
+EXPOSE 44383
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY MicroStore.sln ./
 COPY Services/ProductService/ProductService.csproj Services/ProductService/
-RUN dotnet restore -nowarn:msb3202,nu1503
+COPY Common/RabbitMQ.Common/RabbitMQ.Common.csproj Common/RabbitMQ.Common/
+RUN dotnet restore Services/ProductService/ProductService.csproj
 COPY . .
 WORKDIR /src/Services/ProductService
-RUN dotnet build -c Release -o /app
+RUN dotnet build ProductService.csproj -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish -c Release -o /app
+RUN dotnet publish ProductService.csproj -c Release -o /app
 
 FROM base AS final
 WORKDIR /app

@@ -1,8 +1,9 @@
+using Microsoft.Extensions.HealthChecks;
 using Npgsql;
 using System;
 using System.Data;
 
-namespace Microsoft.Extensions.HealthChecks
+namespace MicroStore.Extensions.HealthChecks
 {
     public static class HealthCheckBuilderPostgreSQLExtensions
     {

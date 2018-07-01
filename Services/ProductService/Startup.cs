@@ -21,6 +21,7 @@ using RabbitMQ.Client;
 using System.Collections.Generic;
 using Swashbuckle.AspNetCore.Swagger;
 using ProductService.Infrastructure.Filters;
+using MicroStore.Extensions.HealthChecks;
 
 namespace ProductService
 {
@@ -37,10 +38,17 @@ namespace ProductService
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            services.AddHealthChecks(checks =>
+            {                
+                checks.AddNpgsqlCheck("productdb", connectionString, TimeSpan.FromMinutes(1));                
+            });
+
             services.AddMvc()
                 .AddControllersAsServices();
 
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             services.AddEntityFrameworkNpgsql().AddDbContext<ProductContext>(options =>

@@ -132,6 +132,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5201               
       - ProductUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5200
+      - IdentityUrlHC=http://identityservice/hc
+      - ProductUrlHC=http://productservice/hc
+      - BookingUrlHC=http://bookingservice/hc      
+      - PaymentUrlHC=http://paymentservice/hc
+      - NotificationUrlHC=http://notificationservice/hc      
     ports:
       - "5100:80"  
 

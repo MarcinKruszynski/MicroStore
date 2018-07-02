@@ -13,6 +13,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.IO;
 using IdentityServer4.Services;
 using System;
+using MicroStore.Extensions.HealthChecks;
 
 namespace IdentityService
 {
@@ -42,6 +43,11 @@ namespace IdentityService
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddHealthChecks(checks =>
+            {
+                checks.AddNpgsqlCheck("identitydb", connectionString, TimeSpan.FromMinutes(1));
+            });
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();

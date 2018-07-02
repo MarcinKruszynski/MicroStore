@@ -29,6 +29,7 @@ namespace IdentityService
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(ic => ic.AddJsonFile(Path.Combine("cert", "configuration.json")))
                 .UseStartup<Startup>()
+                .UseHealthChecks("/hc")
                 .Build();
     }
 }

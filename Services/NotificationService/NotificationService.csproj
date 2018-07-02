@@ -27,6 +27,9 @@
   </ItemGroup>  
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\HealthChecks\Microsoft.AspNetCore.HealthChecks\Microsoft.AspNetCore.HealthChecks.csproj" />
+    <ProjectReference Include="..\..\Common\HealthChecks\Microsoft.Extensions.HealthChecks\Microsoft.Extensions.HealthChecks.csproj" />
+    <ProjectReference Include="..\..\Common\HealthChecks\MicroStore.Extensions.HealthChecks.PostgreSQL\MicroStore.Extensions.HealthChecks.PostgreSQL.csproj" />
     <ProjectReference Include="..\..\Common\RabbitMQ.Common\RabbitMQ.Common.csproj" />
   </ItemGroup>
 

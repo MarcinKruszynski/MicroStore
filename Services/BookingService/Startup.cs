@@ -24,6 +24,7 @@ using Polly;
 using RabbitMQ.Client;
 using RabbitMQ.Common;
 using Swashbuckle.AspNetCore.Swagger;
+using MicroStore.Extensions.HealthChecks;
 
 namespace BookingService
 {
@@ -39,10 +40,16 @@ namespace BookingService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            services.AddHealthChecks(checks =>
+            {
+                checks.AddNpgsqlCheck("bookingdb", connectionString, TimeSpan.FromMinutes(1));
+            });
+
             services.AddMvc()
                 .AddControllersAsServices();
-
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             services.AddEntityFrameworkNpgsql().AddDbContext<BookingContext>(options =>

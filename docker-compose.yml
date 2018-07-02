@@ -89,3 +89,9 @@ services:
     build:
       context: .
       dockerfile: Clients/WebApp/Dockerfile
+
+  webstatus:
+    image: webstatus
+    build:
+      context: .
+      dockerfile: Monitoring/WebStatus/Dockerfile

@@ -138,7 +138,20 @@ services:
       - PaymentUrlHC=http://paymentservice/hc
       - NotificationUrlHC=http://notificationservice/hc      
     ports:
-      - "5100:80"  
+      - "5100:80"
+
+  webstatus:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - IdentityUrl=http://identityservice/hc
+      - ProductUrl=http://productservice/hc
+      - BookingUrl=http://bookingservice/hc
+      - PaymentUrl=http://paymentservice/hc      
+      - NotificationUrl=http://notificationservice/hc      
+      - spa=http://webapp/hc
+    ports:
+      - "5105:80"
 
 volumes:
   postgres-identity-data-volume:

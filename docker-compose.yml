@@ -21,6 +21,14 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.7.5-management-alpine
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.3.0
+    depends_on:
+     - elasticsearch
     
   identityservice:
     image: identityservice
@@ -29,6 +37,7 @@ services:
       dockerfile: Services/IdentityService/Dockerfile
     depends_on:
      - identitydb
+     - elasticsearch
 
   apigateway:
     image: apigateway
@@ -41,6 +50,7 @@ services:
      - bookingdb
      - notificationdb
      - notificationnosqldb
+     - elasticsearch
      - identityservice
      - rabbitmq
      - productservice
@@ -54,6 +64,7 @@ services:
       dockerfile: Services/ProductService/Dockerfile
     depends_on:
      - productdb
+     - elasticsearch
      - rabbitmq
 
   bookingservice:
@@ -63,6 +74,7 @@ services:
       dockerfile: Services/BookingService/Dockerfile
     depends_on:
      - bookingdb
+     - elasticsearch
      - rabbitmq
 
   paymentservice:
@@ -72,6 +84,7 @@ services:
       dockerfile: Services/PaymentService/Dockerfile
     depends_on:
      - paymentdb
+     - elasticsearch
      - rabbitmq
 
   notificationservice:
@@ -82,6 +95,7 @@ services:
     depends_on:
      - notificationnosqldb
      - notificationdb
+     - elasticsearch
      - rabbitmq
 
   webapp:
@@ -89,6 +103,8 @@ services:
     build:
       context: .
       dockerfile: Clients/WebApp/Dockerfile
+    depends_on:     
+     - elasticsearch
 
   webstatus:
     image: webstatus

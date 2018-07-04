@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using Swashbuckle.AspNetCore.Swagger;
 using ProductService.Infrastructure.Filters;
 using MicroStore.Extensions.HealthChecks;
+using Serilog;
+using ProductService.Infrastructure.Diagnostics;
 
 namespace ProductService
 {
@@ -118,11 +120,13 @@ namespace ProductService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
+
+            app.UseMiddleware<SerilogMiddleware>();
 
             app.UseMvcWithDefaultRoute();
 
@@ -134,7 +138,7 @@ namespace ProductService
                   c.OAuthAppName("Products Swagger UI");
               });            
 
-            WaitForSqlAvailabilityAsync(loggerFactory, app, env).Wait();
+            WaitForSqlAvailabilityAsync(app, env).Wait();
         }
 
         private IContainer RegisterEventBus(ContainerBuilder containerBuilder, IServiceCollection services)
@@ -292,10 +296,9 @@ namespace ProductService
         }
 
 
-        private async Task WaitForSqlAvailabilityAsync(ILoggerFactory loggerFactory, IApplicationBuilder app, IHostingEnvironment env, int retries = 0)
+        private async Task WaitForSqlAvailabilityAsync(IApplicationBuilder app, IHostingEnvironment env, int retries = 0)
         {
-            var logger = loggerFactory.CreateLogger(nameof(Startup));
-            var policy = CreatePolicy(retries, logger, nameof(WaitForSqlAvailabilityAsync));
+            var policy = CreatePolicy(retries, nameof(WaitForSqlAvailabilityAsync));
             await policy.ExecuteAsync(async () =>
             {
                 var context = (ProductContext)app
@@ -306,15 +309,17 @@ namespace ProductService
 
         }
 
-        private Policy CreatePolicy(int retries, ILogger logger, string prefix)
+        private Policy CreatePolicy(int retries, string prefix)
         {
+            var logger = Log.ForContext<Startup>();
+
             return Policy.Handle<SocketException>().
                 WaitAndRetryAsync(
                     retryCount: retries,
                     sleepDurationProvider: retry => TimeSpan.FromSeconds(5),
                     onRetry: (exception, timeSpan, retry, ctx) =>
                     {
-                        logger.LogTrace($"[{prefix}] Exception {exception.GetType().Name} with message ${exception.Message} detected on attempt {retry} of {retries}");
+                        logger.Warning($"[{prefix}] Exception {exception.GetType().Name} with message ${exception.Message} detected on attempt {retry} of {retries}");
                     }
                 );
         }

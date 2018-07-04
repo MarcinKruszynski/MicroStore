@@ -49,7 +49,7 @@ services:
   notificationnosqldb:
     restart: always
     volumes:
-      - postgres-notificationnosql-data-volume:/data/db
+      - nosql-notification-data-volume:/data/db
     ports:
       - "27017:27017"
 
@@ -57,6 +57,16 @@ services:
     ports:
       - "15672:15672"
       - "5672:5672"
+
+  elasticsearch:
+    volumes:
+      - elasticsearch-data-volume:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+  kibana:
+    ports:
+      - "5601:5601"
 
   identityservice:
     environment:
@@ -84,6 +94,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:DefaultConnection=Host=productdb;Database=productdb;Username=postgres;Password=password"
+      - ElasticUrl=elasticsearch
       - IdentityUrl=http://identityservice 
       - IdentityUrlExternal=http://${EXTERNAL_DNS_NAME_OR_IP}:5201
       - EventBusConnection=rabbitmq
@@ -154,9 +165,10 @@ services:
       - "5105:80"
 
 volumes:
+  elasticsearch-data-volume:
   postgres-identity-data-volume:
   postgres-product-data-volume:
   postgres-booking-data-volume:
   postgres-payment-data-volume:
   postgres-notification-data-volume:
-  postgres-notificationnosql-data-volume:
+  nosql-notification-data-volume:

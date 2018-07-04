@@ -212,6 +212,8 @@ namespace ProductService
                              TimeSpan.FromSeconds(5),
                              TimeSpan.FromSeconds(10),
                              TimeSpan.FromSeconds(15),
+                             TimeSpan.FromSeconds(20),
+                             TimeSpan.FromSeconds(25)
                          });
 
             await retry.ExecuteAsync(async() =>
@@ -319,7 +321,7 @@ namespace ProductService
                     sleepDurationProvider: retry => TimeSpan.FromSeconds(5),
                     onRetry: (exception, timeSpan, retry, ctx) =>
                     {
-                        logger.Warning($"[{prefix}] Exception {exception.GetType().Name} with message ${exception.Message} detected on attempt {retry} of {retries}");
+                        logger.Verbose(exception, "{prefix} Exception detected on attempt {retry} of {retries}", prefix, retry, retries);
                     }
                 );
         }

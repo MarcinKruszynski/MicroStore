@@ -211,9 +211,7 @@ namespace ProductService
                          {
                              TimeSpan.FromSeconds(5),
                              TimeSpan.FromSeconds(10),
-                             TimeSpan.FromSeconds(15),
-                             TimeSpan.FromSeconds(20),
-                             TimeSpan.FromSeconds(25)
+                             TimeSpan.FromSeconds(15)                             
                          });
 
             await retry.ExecuteAsync(async() =>

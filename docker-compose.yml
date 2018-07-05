@@ -37,7 +37,7 @@ services:
       dockerfile: Services/IdentityService/Dockerfile
     depends_on:
      - identitydb
-     - elasticsearch
+#     - elasticsearch
 
   apigateway:
     image: apigateway
@@ -50,7 +50,7 @@ services:
      - bookingdb
      - notificationdb
      - notificationnosqldb
-     - elasticsearch
+#     - elasticsearch
      - identityservice
      - rabbitmq
      - productservice
@@ -74,7 +74,7 @@ services:
       dockerfile: Services/BookingService/Dockerfile
     depends_on:
      - bookingdb
-     - elasticsearch
+#     - elasticsearch
      - rabbitmq
 
   paymentservice:
@@ -84,7 +84,7 @@ services:
       dockerfile: Services/PaymentService/Dockerfile
     depends_on:
      - paymentdb
-     - elasticsearch
+#     - elasticsearch
      - rabbitmq
 
   notificationservice:
@@ -95,7 +95,7 @@ services:
     depends_on:
      - notificationnosqldb
      - notificationdb
-     - elasticsearch
+#     - elasticsearch
      - rabbitmq
 
   webapp:
@@ -103,8 +103,8 @@ services:
     build:
       context: .
       dockerfile: Clients/WebApp/Dockerfile
-    depends_on:     
-     - elasticsearch
+#    depends_on:     
+#     - elasticsearch
 
   webstatus:
     image: webstatus

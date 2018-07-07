@@ -11,6 +11,8 @@ namespace ProductService
     {
         public static void Main(string[] args)
         {
+            Serilog.Debugging.SelfLog.Enable(message => Console.WriteLine(message));
+
             BuildWebHost(args)
                 .Run();
         }
@@ -28,6 +30,8 @@ namespace ProductService
                             .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(hostingContext.Configuration["ElasticUrl"]))
                             {
                                 AutoRegisterTemplate = true,
+                                AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
+                                EmitEventFailure = EmitEventFailureHandling.WriteToSelfLog 
                             })
                           )
                 .Build();

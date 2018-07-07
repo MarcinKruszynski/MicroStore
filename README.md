@@ -18,6 +18,9 @@ Sample ASP.NET Core microservice app using:
 - WebPush
 - Swagger
 - HealthChecks
+- Serilog
+- Elasticsearch
+- Kibana
 
 To be continued
 

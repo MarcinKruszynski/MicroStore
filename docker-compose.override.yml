@@ -91,6 +91,15 @@ services:
     volumes:
       - ./ApiGateways/apigw:/app/configuration
 
+  aggregatorgateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development      
+      - urls__ProductUrl=http://productservice
+      - urls__BookingUrl=http://bookingservice
+      - urls__IdentityUrl=http://identityservice
+    ports:
+      - "5202:80"
+
   productservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -164,6 +173,7 @@ services:
       - spa=http://webapp/hc
     ports:
       - "5105:80"
+      
 
 volumes:
   elasticsearch-data-volume:
@@ -173,3 +183,4 @@ volumes:
   postgres-payment-data-volume:
   postgres-notification-data-volume:
   nosql-notification-data-volume:
+

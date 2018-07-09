@@ -57,6 +57,24 @@ services:
      - bookingservice
      - notificationservice
 
+  aggregatorgateway:
+    image: aggregatorgateway
+    build:
+      context: .
+      dockerfile: ApiGateways/AggregatorGateway/Dockerfile
+    depends_on:
+     - identitydb
+     - productdb
+     - bookingdb
+     - notificationdb
+     - notificationnosqldb
+#     - elasticsearch
+     - identityservice
+     - rabbitmq
+     - productservice
+     - bookingservice
+     - notificationservice
+
   productservice:
     image: productservice
     build:

@@ -49,5 +49,21 @@ namespace BookingService.Controllers
 
             return Accepted();
         }
+
+        [Route("add")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> AddBooking([FromBody]Booking booking)
+        {            
+            _bookingRepository.Add(booking);
+
+            await _bookingRepository.SaveChangesAsync();
+
+            var eventMessage = new BookingStartedIntegrationEvent(booking.GetUserId(), booking.Id, booking.ProductId, booking.GetUnits());
+            await _endpoint.Publish(eventMessage);
+
+            return Accepted();
+        }
     }
 }

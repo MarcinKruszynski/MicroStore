@@ -99,6 +99,8 @@ services:
       - urls__IdentityUrl=http://identityservice
     ports:
       - "5202:80"
+    volumes:
+      - ./ApiGateways/aggregatorgw:/app/configuration
 
   productservice:
     environment:

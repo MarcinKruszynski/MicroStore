@@ -91,16 +91,14 @@ services:
     volumes:
       - ./ApiGateways/apigw:/app/configuration
 
-  aggregatorgateway:
+  bookingagg:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development      
       - urls__ProductUrl=http://productservice
       - urls__BookingUrl=http://bookingservice
       - urls__IdentityUrl=http://identityservice
     ports:
-      - "5202:80"
-    volumes:
-      - ./ApiGateways/aggregatorgw:/app/configuration
+      - "5202:80"    
 
   productservice:
     environment:

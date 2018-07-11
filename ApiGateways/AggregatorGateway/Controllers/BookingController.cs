@@ -1,10 +1,10 @@
-﻿using AggregatorGateway.Interfaces;
-using AggregatorGateway.Model;
+﻿using BookingAggregator.Interfaces;
+using BookingAggregator.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace AggregatorGateway.Controllers
+namespace BookingAggregator.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]

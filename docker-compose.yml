@@ -57,11 +57,11 @@ services:
      - bookingservice
      - notificationservice
 
-  aggregatorgateway:
-    image: aggregatorgateway
+  bookingagg:
+    image: bookingagg
     build:
       context: .
-      dockerfile: ApiGateways/AggregatorGateway/Dockerfile
+      dockerfile: ApiGateways/BookingAggregator/Dockerfile
     depends_on:
      - identitydb
      - productdb

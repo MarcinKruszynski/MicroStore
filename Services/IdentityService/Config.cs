@@ -26,7 +26,8 @@ namespace IdentityService
             {
                 new ApiResource("products", "Products Service"),
                 new ApiResource("booking", "Booking Service"),
-                new ApiResource("notification", "Notification Service")
+                new ApiResource("notification", "Notification Service"),
+                new ApiResource("bookingagg", "Booking Aggregator")
             };
         }
 
@@ -53,7 +54,8 @@ namespace IdentityService
                         IdentityServerConstants.StandardScopes.Profile,
                         "products",
                         "booking",
-                        "notification"
+                        "notification",
+                        "bookingagg"
                     },
                 },
                 new Client

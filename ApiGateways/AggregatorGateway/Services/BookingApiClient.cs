@@ -1,12 +1,12 @@
-﻿using AggregatorGateway.Interfaces;
-using AggregatorGateway.Model;
+﻿using BookingAggregator.Interfaces;
+using BookingAggregator.Model;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace AggregatorGateway.Services
+namespace BookingAggregator.Services
 {
     public class BookingApiClient: IBookingApiClient
     {

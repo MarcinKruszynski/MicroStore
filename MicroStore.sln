@@ -9,11 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{FCFD60BF-475F-48F7-951F-BE0BEEC13324}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apigw", "apigw", "{AE563319-E8BF-4FA7-9BFD-475C4C3A5B62}"
-	ProjectSection(SolutionItems) = preProject
-		ApiGateways\apigw\configuration.json = ApiGateways\apigw\configuration.json
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{45DB7513-E6BF-49A3-BA1B-C8E3E2CD8C18}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C41EE9A-6DE2-4549-9E33-54B88106B43C}"
@@ -59,11 +54,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Monitoring", "Monitoring", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStatus", "Monitoring\WebStatus\WebStatus.csproj", "{714F7A32-3C0F-412C-8B79-23ADEE27E34E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AggregatorGateway", "ApiGateways\AggregatorGateway\AggregatorGateway.csproj", "{4D5A6E06-B118-4FA1-871A-5BF596F41401}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingAggregator", "ApiGateways\AggregatorGateway\BookingAggregator.csproj", "{4D5A6E06-B118-4FA1-871A-5BF596F41401}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aggregatorgw", "aggregatorgw", "{576794CC-021D-4264-9097-F9692B8A3063}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apigw", "apigw", "{CB6C11FB-7E59-4A2B-BADD-A7FE76A11755}"
 	ProjectSection(SolutionItems) = preProject
-		ApiGateways\aggregatorgw\configuration.json = ApiGateways\aggregatorgw\configuration.json
+		ApiGateways\apigw\configuration.json = ApiGateways\apigw\configuration.json
 	EndProjectSection
 EndProject
 Global
@@ -137,7 +132,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{AE563319-E8BF-4FA7-9BFD-475C4C3A5B62} = {964F9328-36C2-40F3-968A-BCAEF5743753}
 		{301318CB-3EC0-43A0-9C2B-2177399F73FB} = {FCFD60BF-475F-48F7-951F-BE0BEEC13324}
 		{1AF20B81-FC00-4DE2-97FB-C4C7382FE1C1} = {964F9328-36C2-40F3-968A-BCAEF5743753}
 		{BE8D4D7A-50B9-4052-A228-0A412D63912C} = {45DB7513-E6BF-49A3-BA1B-C8E3E2CD8C18}
@@ -154,7 +148,7 @@ Global
 		{A7CBA436-AC4F-4FA0-8267-0A484F156A2C} = {93C333BC-40D9-4CA1-B632-A4A64D8AF97F}
 		{714F7A32-3C0F-412C-8B79-23ADEE27E34E} = {A3CF5F20-F1B2-4AAB-8B28-F3129B3CB74A}
 		{4D5A6E06-B118-4FA1-871A-5BF596F41401} = {964F9328-36C2-40F3-968A-BCAEF5743753}
-		{576794CC-021D-4264-9097-F9692B8A3063} = {964F9328-36C2-40F3-968A-BCAEF5743753}
+		{CB6C11FB-7E59-4A2B-BADD-A7FE76A11755} = {964F9328-36C2-40F3-968A-BCAEF5743753}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E56F6426-E8C9-453E-8798-4C4554B2E740}

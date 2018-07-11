@@ -1,7 +1,7 @@
-﻿using AggregatorGateway.Model;
+﻿using BookingAggregator.Model;
 using System.Threading.Tasks;
 
-namespace AggregatorGateway.Interfaces
+namespace BookingAggregator.Interfaces
 {
     public interface IProductService
     {

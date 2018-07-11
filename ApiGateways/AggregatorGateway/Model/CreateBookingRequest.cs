@@ -1,4 +1,4 @@
-﻿namespace AggregatorGateway.Model
+﻿namespace BookingAggregator.Model
 {
     public class CreateBookingRequest
     {

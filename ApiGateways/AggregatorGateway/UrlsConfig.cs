@@ -1,4 +1,4 @@
-﻿namespace AggregatorGateway
+﻿namespace BookingAggregator
 {
     public class UrlsConfig
     {

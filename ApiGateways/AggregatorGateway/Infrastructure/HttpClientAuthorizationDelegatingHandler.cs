@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AggregatorGateway.Infrastructure
+namespace BookingAggregator.Infrastructure
 {
     public class HttpClientAuthorizationDelegatingHandler
          : DelegatingHandler

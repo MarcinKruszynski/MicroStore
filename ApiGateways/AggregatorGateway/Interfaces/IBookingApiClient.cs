@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AggregatorGateway.Interfaces
+namespace BookingAggregator.Interfaces
 {
     public interface IBookingApiClient
     {

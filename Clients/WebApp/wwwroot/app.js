@@ -96,6 +96,7 @@ function log() {
 document.getElementById("login").addEventListener("click", login, false);
 document.getElementById("api").addEventListener("click", api, false);
 document.getElementById("checkout").addEventListener("click", checkout, false);
+document.getElementById("checkout2").addEventListener("click", checkout2, false);
 document.getElementById("logout").addEventListener("click", logout, false);
 
 /*
@@ -143,7 +144,7 @@ var config = {
     client_id: "spa",
     redirect_uri: "http://localhost:5100/callback.html",
     response_type: "id_token token",
-    scope: "openid profile products booking notification",
+    scope: "openid profile products booking notification bookingagg",
     post_logout_redirect_uri: "http://localhost:5100/index.html",
 };
 var mgr = new Oidc.UserManager(config);
@@ -209,6 +210,29 @@ function checkout() {
             };
             
             xhr.setRequestHeader("Content-type", "application/json");            
+            xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
+            xhr.send(JSON.stringify(data));
+        });
+}
+
+function checkout2() {
+    if (mgr)
+        mgr.getUser().then(function (user) {
+            var url = "http://localhost:5202/api/v1/booking/book";             
+
+            var data = {                
+                productId: 2,                
+                quantity: 10
+            };
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                }
+            };
+
+            xhr.setRequestHeader("Content-type", "application/json");
             xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
             xhr.send(JSON.stringify(data));
         });

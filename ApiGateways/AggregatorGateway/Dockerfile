@@ -4,16 +4,16 @@ EXPOSE 80
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY ApiGateways/AggregatorGateway/AggregatorGateway.csproj ApiGateways/AggregatorGateway/
-RUN dotnet restore ApiGateways/AggregatorGateway/AggregatorGateway.csproj
+COPY ApiGateways/BookingAggregator/BookingAggregator.csproj ApiGateways/BookingAggregator/
+RUN dotnet restore ApiGateways/BookingAggregator/BookingAggregator.csproj
 COPY . .
-WORKDIR /src/ApiGateways/AggregatorGateway
-RUN dotnet build AggregatorGateway.csproj -c Release -o /app
+WORKDIR /src/ApiGateways/BookingAggregator
+RUN dotnet build BookingAggregator.csproj -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish AggregatorGateway.csproj -c Release -o /app
+RUN dotnet publish BookingAggregator.csproj -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "AggregatorGateway.dll"]
+ENTRYPOINT ["dotnet", "BookingAggregator.dll"]

@@ -4,9 +4,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AggregatorGateway.Infrastructure;
-using AggregatorGateway.Interfaces;
-using AggregatorGateway.Services;
+using BookingAggregator.Infrastructure;
+using BookingAggregator.Interfaces;
+using BookingAggregator.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,7 +19,7 @@ using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
 
-namespace AggregatorGateway
+namespace BookingAggregator
 {
     public class Startup
     {
@@ -59,7 +59,7 @@ namespace AggregatorGateway
             {
                 options.Authority = identityUrl;
                 options.RequireHttpsMetadata = false;
-                options.Audience = "aggregatorgateway";
+                options.Audience = "bookingagg";
                 options.Events = new JwtBearerEvents()
                 {
                     OnAuthenticationFailed = async ctx =>

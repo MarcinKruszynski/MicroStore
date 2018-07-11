@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "AggregatorGateway": {
+    "BookingAggregator": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",

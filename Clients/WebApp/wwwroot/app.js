@@ -218,7 +218,7 @@ function checkout() {
 function checkout2() {
     if (mgr)
         mgr.getUser().then(function (user) {
-            var url = "http://localhost:5202/api/v1/booking/book";             
+            var url = "http://localhost:5200/api/v1/booking/book";             
 
             var data = {                
                 productId: 2,                

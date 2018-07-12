@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookingAggregator.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [Authorize]
     [ApiController]
     public class BookingController : ControllerBase

@@ -27,12 +27,12 @@ namespace ProductService
                             .Enrich.WithExceptionDetails()
                             .Enrich.WithMachineName()
                             .WriteTo.Console()
-                            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(hostingContext.Configuration["ElasticUrl"]))
-                            {
-                                AutoRegisterTemplate = true,
-                                AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
-                                EmitEventFailure = EmitEventFailureHandling.WriteToSelfLog 
-                            })
+                            //.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(hostingContext.Configuration["ElasticUrl"]))
+                            //{
+                            //    AutoRegisterTemplate = true,
+                            //    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
+                            //    EmitEventFailure = EmitEventFailureHandling.WriteToSelfLog 
+                            //})
                           )
                 .Build();
     }

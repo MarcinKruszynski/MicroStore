@@ -32,7 +32,7 @@ namespace BookingAggregator.Services
 
             var content = new StringContent(JsonConvert.SerializeObject(bookingCheckout), System.Text.Encoding.UTF8, "application/json");
 
-            await _httpClient.PostAsync(_urls.BookingUrl + "/api/v1/bookings/add", content);                       
+            await _httpClient.PostAsync(_urls.BookingUrl + "/api/v1/bookings/checkout", content);                       
         }
     }
 }

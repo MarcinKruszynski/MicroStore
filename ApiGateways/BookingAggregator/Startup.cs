@@ -77,6 +77,7 @@ namespace BookingAggregator
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();            
 
             services.AddHttpClient<IProductService, ProductService>()
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
                 .AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(GetCircuitBreakerPolicy());
 

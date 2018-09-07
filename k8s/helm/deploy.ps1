@@ -8,6 +8,11 @@ Param(
     [parameter(Mandatory=$false)][string]$imageTag="latest"
 )
 
+class InfraRecord {
+    [string] $Name
+    [string] $Image
+}
+
 $dns = $externalDns
 
 # Initialization & check commands
@@ -23,13 +28,20 @@ if ($clean) {
 
 Write-Host "Begin MicroStore installation using Helm" -ForegroundColor Green
 
-$infras = ("identitydb") #, "productdb", "bookingdb", "paymentdb", "notificationdb", "notificationnosqldb", "rabbitmq", "elasticsearch", "kibana")
+$infras = [System.Collections.Generic.List[InfraRecord]]::new()
+
+$newRec1 = [InfraRecord] @{ Name = 'identitydb'; Image = 'stable/postgresql'}
+$infras.Add($newRec1)
+
+# "productdb", "bookingdb", "paymentdb", "notificationdb", "notificationnosqldb", "rabbitmq", "elasticsearch", "kibana"
+
 $charts = ("identityservice", "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 
 if ($deployInfrastructure) {
     foreach ($infra in $infras) {
-        Write-Host "Installing infrastructure: $infra" -ForegroundColor Green
-        #helm install $infra     
+        Write-Host "Installing infrastructure: $($infra.Name)" -ForegroundColor Green
+        Write-Host "helm install --name $($infra.Name) -f ./$($infra.Name)/values.yaml $($infra.Image)" -ForegroundColor Green
+        helm install --name $($infra.Name) -f ./$($infra.Name)/values.yaml $($infra.Image)
     }
 }
 

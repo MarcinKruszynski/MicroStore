@@ -33,7 +33,19 @@ $infras = [System.Collections.Generic.List[InfraRecord]]::new()
 $newRec1 = [InfraRecord] @{ Name = 'identitydb'; Image = 'stable/postgresql'}
 $infras.Add($newRec1)
 
-# "productdb", "bookingdb", "paymentdb", "notificationdb", "notificationnosqldb", "rabbitmq", "elasticsearch", "kibana"
+$newRec2 = [InfraRecord] @{ Name = 'productdb'; Image = 'stable/postgresql'}
+$infras.Add($newRec2)
+
+$newRec3 = [InfraRecord] @{ Name = 'bookingdb'; Image = 'stable/postgresql'}
+$infras.Add($newRec3)
+
+$newRec4 = [InfraRecord] @{ Name = 'paymentdb'; Image = 'stable/postgresql'}
+$infras.Add($newRec4)
+
+$newRec5 = [InfraRecord] @{ Name = 'notificationdb'; Image = 'stable/postgresql'}
+$infras.Add($newRec5)
+
+# "notificationnosqldb", "rabbitmq", "elasticsearch", "kibana"
 
 $charts = ("identityservice", "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 

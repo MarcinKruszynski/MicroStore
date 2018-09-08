@@ -1,0 +1,17 @@
+## Create a database user
+## Default: postgres
+postgresUser: postgres
+## Default: random 10 character string
+postgresPassword: password
+
+## Create a database
+## Default: the postgres user
+postgresDatabase: postgres
+
+## Persist data to a persistent volume
+persistence:
+  enabled: false
+  
+##  accessMode: ReadWriteOnce
+##  size: 1Gi
+##  subPath: "postgresql-identitydb"

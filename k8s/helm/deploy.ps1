@@ -11,6 +11,7 @@ Param(
 class InfraRecord {
     [string] $Name
     [string] $Image
+    [string] $Repository
 }
 
 $dns = $externalDns
@@ -45,15 +46,31 @@ $infras.Add($newRec4)
 $newRec5 = [InfraRecord] @{ Name = 'notificationdb'; Image = 'stable/postgresql'}
 $infras.Add($newRec5)
 
-# "notificationnosqldb", "rabbitmq", "elasticsearch", "kibana"
+$newRec6 = [InfraRecord] @{ Name = 'notificationnosqldb'; Image = 'stable/mongodb'}
+$infras.Add($newRec6)
+
+$newRec7 = [InfraRecord] @{ Name = 'rabbitmq'; Image = 'stable/rabbitmq'}
+$infras.Add($newRec7)
+
+$newRec8 = [InfraRecord] @{ Name = 'elasticsearch'; Image = 'bitnami/elasticsearch'; Repository = 'https://charts.bitnami.com/bitnami'}
+$infras.Add($newRec8)
+
+# "kibana"
 
 $charts = ("identityservice", "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 
 if ($deployInfrastructure) {
     foreach ($infra in $infras) {
         Write-Host "Installing infrastructure: $($infra.Name)" -ForegroundColor Green
-        Write-Host "helm install --name $($infra.Name) -f ./$($infra.Name)/values.yaml $($infra.Image)" -ForegroundColor Green
-        helm install --name $($infra.Name) -f ./$($infra.Name)/values.yaml $($infra.Image)
+
+        if (-not [string]::IsNullOrEmpty($($infra.Repository))) {
+		   Write-Host "helm install --name $($infra.Name) -f ./$($infra.Name)/values.yaml -repo $($infra.Repository) $($infra.Image)" -ForegroundColor Green
+           helm install --name $($infra.Name) -f ./$($infra.Name)/values.yaml -repo $($infra.Repository) $($infra.Image)
+        }
+		else {
+		   Write-Host "helm install --name $($infra.Name) -f ./$($infra.Name)/values.yaml $($infra.Image)" -ForegroundColor Green
+           helm install --name $($infra.Name) -f ./$($infra.Name)/values.yaml $($infra.Image)
+		}
     }
 }
 

@@ -21,6 +21,8 @@ Sample ASP.NET Core microservice app using:
 - Serilog
 - Elasticsearch
 - Kibana
+- Kubernetes
+- Helm
 
 To be continued
 

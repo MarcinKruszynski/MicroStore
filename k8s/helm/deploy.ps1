@@ -54,7 +54,8 @@ $infras.Add($newRec7)
 $newRec8 = [InfraRecord] @{ Name = 'elasticsearch' }
 $infras.Add($newRec8)
 
-# "kibana"
+$newRec9 = [InfraRecord] @{ Name = 'kibana'; Image = 'stable/kibana'}
+$infras.Add($newRec9)
 
 $charts = ("identityservice", "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 

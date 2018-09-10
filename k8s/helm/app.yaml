@@ -1,0 +1,12 @@
+app:
+  ingress:
+    entries:
+      identity: identity
+      products: products
+      booking: booking
+      webapp: ""
+  svc:
+      identity: identityservice
+      products: productservice
+      booking: bookingservice
+      webapp: webapp

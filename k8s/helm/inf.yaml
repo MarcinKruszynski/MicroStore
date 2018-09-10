@@ -1,0 +1,12 @@
+inf:
+  postgresql:
+    common:
+      user: postgres
+      password: password
+    identity:
+      host: identitydb-postgresql
+      database: identitydb
+  eventbus:
+    constr: rabbitmq
+  k8s:
+    dns:  ""

@@ -1,0 +1,17 @@
+{{- $name := include "identityservice.fullname" . -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "cfg-{{ $name }}"
+  labels:
+    app: {{ template "identityservice.name" . }}
+    chart: {{ template "identityservice.chart" .}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  identity__ConnectionString: Host={{ .Values.inf.postgresql.identity.host }};Database={{ .Values.inf.postgresql.identity.database }};Username={{ .Values.inf.postgresql.common.user }};Password={{ .Values.inf.postgresql.common.password }}
+  internalurls__identity: http://{{ .Values.app.svc.identity }}
+  spa_e: http://{{ .Values.inf.k8s.dns }}
+  products_e: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.products }}
+  booking_e: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.booking }}

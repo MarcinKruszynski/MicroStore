@@ -1,7 +1,7 @@
 Param(    
     [parameter(Mandatory=$false)][string]$dockerUser,
     [parameter(Mandatory=$false)][string]$dockerPassword,
-    [parameter(Mandatory=$false)][string]$externalDns,
+    [parameter(Mandatory=$false)][string]$externalDns="localhost",
     [parameter(Mandatory=$false)][string]$appName="microstore",
     [parameter(Mandatory=$false)][bool]$deployInfrastructure=$true,
     [parameter(Mandatory=$false)][bool]$clean=$true,    
@@ -33,31 +33,31 @@ $infras = [System.Collections.Generic.List[InfraRecord]]::new()
 $newRec1 = [InfraRecord] @{ Name = 'identitydb'; Image = 'stable/postgresql'}
 $infras.Add($newRec1)
 
-$newRec2 = [InfraRecord] @{ Name = 'productdb'; Image = 'stable/postgresql'}
-$infras.Add($newRec2)
+# $newRec2 = [InfraRecord] @{ Name = 'productdb'; Image = 'stable/postgresql'}
+# $infras.Add($newRec2)
 
-$newRec3 = [InfraRecord] @{ Name = 'bookingdb'; Image = 'stable/postgresql'}
-$infras.Add($newRec3)
+# $newRec3 = [InfraRecord] @{ Name = 'bookingdb'; Image = 'stable/postgresql'}
+# $infras.Add($newRec3)
 
-$newRec4 = [InfraRecord] @{ Name = 'paymentdb'; Image = 'stable/postgresql'}
-$infras.Add($newRec4)
+# $newRec4 = [InfraRecord] @{ Name = 'paymentdb'; Image = 'stable/postgresql'}
+# $infras.Add($newRec4)
 
-$newRec5 = [InfraRecord] @{ Name = 'notificationdb'; Image = 'stable/postgresql'}
-$infras.Add($newRec5)
+# $newRec5 = [InfraRecord] @{ Name = 'notificationdb'; Image = 'stable/postgresql'}
+# $infras.Add($newRec5)
 
-$newRec6 = [InfraRecord] @{ Name = 'notificationnosqldb'; Image = 'stable/mongodb'}
-$infras.Add($newRec6)
+# $newRec6 = [InfraRecord] @{ Name = 'notificationnosqldb'; Image = 'stable/mongodb'}
+# $infras.Add($newRec6)
 
-$newRec7 = [InfraRecord] @{ Name = 'rabbitmq'; Image = 'stable/rabbitmq'}
-$infras.Add($newRec7)
+# $newRec7 = [InfraRecord] @{ Name = 'rabbitmq'; Image = 'stable/rabbitmq'}
+# $infras.Add($newRec7)
 
-$newRec8 = [InfraRecord] @{ Name = 'elasticsearch' }
-$infras.Add($newRec8)
+# $newRec8 = [InfraRecord] @{ Name = 'elasticsearch' }
+# $infras.Add($newRec8)
 
-$newRec9 = [InfraRecord] @{ Name = 'kibana'; Image = 'stable/kibana'}
-$infras.Add($newRec9)
+# $newRec9 = [InfraRecord] @{ Name = 'kibana'; Image = 'stable/kibana'}
+# $infras.Add($newRec9)
 
-$charts = ("identityservice", "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
+$charts = ("identityservice") #, "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 
 if ($deployInfrastructure) {
     foreach ($infra in $infras) {
@@ -72,6 +72,12 @@ if ($deployInfrastructure) {
            helm install --name $($infra.Name) -f ./$($infra.Name)/values.yaml $($infra.Image)
 		}
     }
+}
+
+foreach ($chart in $charts) {
+    Write-Host "Installing: $chart" -ForegroundColor Green
+
+    helm install --values app.yaml --values inf.yaml --values ingress_values.yaml --set inf.k8s.dns=$dns --name="$chart" $chart
 }
 
 Write-Host "helm charts installed." -ForegroundColor Green

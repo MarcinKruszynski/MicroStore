@@ -1,0 +1,41 @@
+replicaCount: 1
+
+image:
+  repository: identityservice
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  path: /identity
+  annotations: {}
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+
+env:
+  configmap:
+    - name: ConnectionStrings__DefaultConnection
+      key: identity__ConnectionString
+    - name: IdentityUrl
+      key: internalurls__identity
+    - name: SpaClient
+      key: spa_e
+    - name: ProductsClient
+      key: products_e
+    - name: BookingClient
+      key: booking_e
+  values:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: Development

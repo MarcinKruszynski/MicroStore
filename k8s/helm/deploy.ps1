@@ -77,7 +77,7 @@ if ($deployInfrastructure) {
 foreach ($chart in $charts) {
     Write-Host "Installing: $chart" -ForegroundColor Green
 
-    helm install --values app.yaml --values inf.yaml --values ingress_values.yaml --set inf.k8s.dns=$dns --name="$chart" $chart
+    helm install --values app.yaml --set inf.k8s.dns=$dns --name="$chart" $chart
 }
 
 Write-Host "helm charts installed." -ForegroundColor Green

@@ -1,3 +1,16 @@
+inf:
+  postgresql:
+    common:
+      user: postgres
+      password: password
+    identity:
+      host: identitydb-postgresql
+      database: identitydb
+  eventbus:
+    constr: rabbitmq
+  k8s:
+    dns:  ""
+
 app:
   ingress:
     entries:
@@ -10,3 +23,8 @@ app:
       products: productservice
       booking: bookingservice
       webapp: webapp
+
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /

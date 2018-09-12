@@ -8,4 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{ (.Files.Glob "cert/*").AsConfig | indent 2 }}
+  {{ (.Files.Glob "configuration.json").AsConfig | indent 2 }}
+binarydata:
+  {{ (.Files.Glob "idsrv3test.pfx").AsSecrets | indent 2 }}

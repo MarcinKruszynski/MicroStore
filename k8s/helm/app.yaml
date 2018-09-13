@@ -6,8 +6,13 @@ inf:
     identity:
       host: identitydb-postgresql
       database: identitydb
+    payments:
+      host: paymentdb-postgresql
+      database: paymentdb
   eventbus:
-    constr: rabbitmq
+    connection: rabbitmq
+    user: guest
+    password: guest
   k8s:
     dns:  ""
 
@@ -17,11 +22,13 @@ app:
       identity: identity
       products: products
       booking: booking
+      payments: payments
       webapp: ""
   svc:
       identity: identityservice
       products: productservice
       booking: bookingservice
+      payments: paymentservice
       webapp: webapp
 
 ingress:

@@ -39,8 +39,8 @@ $infras.Add($newRec1)
 # $newRec3 = [InfraRecord] @{ Name = 'bookingdb'; Image = 'stable/postgresql'}
 # $infras.Add($newRec3)
 
-# $newRec4 = [InfraRecord] @{ Name = 'paymentdb'; Image = 'stable/postgresql'}
-# $infras.Add($newRec4)
+$newRec4 = [InfraRecord] @{ Name = 'paymentdb'; Image = 'stable/postgresql'}
+$infras.Add($newRec4)
 
 # $newRec5 = [InfraRecord] @{ Name = 'notificationdb'; Image = 'stable/postgresql'}
 # $infras.Add($newRec5)
@@ -48,8 +48,8 @@ $infras.Add($newRec1)
 # $newRec6 = [InfraRecord] @{ Name = 'notificationnosqldb'; Image = 'stable/mongodb'}
 # $infras.Add($newRec6)
 
-# $newRec7 = [InfraRecord] @{ Name = 'rabbitmq'; Image = 'stable/rabbitmq'}
-# $infras.Add($newRec7)
+$newRec7 = [InfraRecord] @{ Name = 'rabbitmq'; Image = 'stable/rabbitmq'}
+$infras.Add($newRec7)
 
 # $newRec8 = [InfraRecord] @{ Name = 'elasticsearch' }
 # $infras.Add($newRec8)
@@ -57,7 +57,8 @@ $infras.Add($newRec1)
 # $newRec9 = [InfraRecord] @{ Name = 'kibana'; Image = 'stable/kibana'}
 # $infras.Add($newRec9)
 
-$charts = ("identityservice") #, "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
+$charts = ("identityservice", "paymentservice")
+# "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 
 if ($deployInfrastructure) {
     foreach ($infra in $infras) {

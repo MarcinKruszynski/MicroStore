@@ -1,0 +1,24 @@
+replicaCount: 1
+
+image:
+  repository: marcinkruszynski/paymentservice
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  path: /payments
+  annotations: {}
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

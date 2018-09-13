@@ -12,6 +12,13 @@ inf:
     payments:
       host: paymentdb-postgresql
       database: paymentdb
+    notifications:
+      host: notificationdb-postgresql
+      database: notificationdb
+  mongo:
+    notifications:
+      host: notificationnosqldb
+      database: PushSubscriptionDb
   eventbus:
     connection: rabbitmq
     user: guest
@@ -26,12 +33,14 @@ app:
       products: products
       booking: booking
       payments: payments
+      notifications: notifications
       webapp: ""
   svc:
       identity: identityservice
       products: productservice
       booking: bookingservice
       payments: paymentservice
+      notifications: notificationservice
       webapp: webapp
 
 ingress:

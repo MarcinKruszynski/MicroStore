@@ -36,8 +36,8 @@ $infras.Add($newRec1)
 # $newRec2 = [InfraRecord] @{ Name = 'productdb'; Image = 'stable/postgresql'}
 # $infras.Add($newRec2)
 
-# $newRec3 = [InfraRecord] @{ Name = 'bookingdb'; Image = 'stable/postgresql'}
-# $infras.Add($newRec3)
+$newRec3 = [InfraRecord] @{ Name = 'bookingdb'; Image = 'stable/postgresql'}
+$infras.Add($newRec3)
 
 $newRec4 = [InfraRecord] @{ Name = 'paymentdb'; Image = 'stable/postgresql'}
 $infras.Add($newRec4)
@@ -57,7 +57,7 @@ $infras.Add($newRec7)
 # $newRec9 = [InfraRecord] @{ Name = 'kibana'; Image = 'stable/kibana'}
 # $infras.Add($newRec9)
 
-$charts = ("identityservice", "paymentservice")
+$charts = ("identityservice", "bookingservice", "paymentservice")
 # "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 
 if ($deployInfrastructure) {

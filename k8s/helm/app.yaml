@@ -6,6 +6,9 @@ inf:
     identity:
       host: identitydb-postgresql
       database: identitydb
+    booking:
+      host: bookingdb-postgresql
+      database: bookingdb
     payments:
       host: paymentdb-postgresql
       database: paymentdb

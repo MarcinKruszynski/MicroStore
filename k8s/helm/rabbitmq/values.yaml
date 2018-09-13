@@ -1,8 +1,8 @@
 ## section of specific values for rabbitmq
-# rabbitmq:
+rabbitmq:
   
-  # username: user 
-  # password:
+  username: guest # user 
+  password: guest
 
   # nodePort: 5672
   # managerPort: 15672

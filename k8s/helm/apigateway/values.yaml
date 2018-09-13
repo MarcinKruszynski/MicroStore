@@ -1,0 +1,24 @@
+replicaCount: 1
+
+image:
+  repository: marcinkruszynski/apigateway
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  path: /apigateway
+  annotations: {}
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

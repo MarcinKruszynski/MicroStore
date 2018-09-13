@@ -34,6 +34,7 @@ app:
       booking: booking
       payments: payments
       notifications: notifications
+      bookingagg: bookingagg
       webapp: ""
   svc:
       identity: identityservice
@@ -41,6 +42,7 @@ app:
       booking: bookingservice
       payments: paymentservice
       notifications: notificationservice
+      bookingagg: bookingagg
       webapp: webapp
 
 ingress:

@@ -33,8 +33,8 @@ $infras = [System.Collections.Generic.List[InfraRecord]]::new()
 $newRec1 = [InfraRecord] @{ Name = 'identitydb'; Image = 'stable/postgresql'}
 $infras.Add($newRec1)
 
-# $newRec2 = [InfraRecord] @{ Name = 'productdb'; Image = 'stable/postgresql'}
-# $infras.Add($newRec2)
+$newRec2 = [InfraRecord] @{ Name = 'productdb'; Image = 'stable/postgresql'}
+$infras.Add($newRec2)
 
 $newRec3 = [InfraRecord] @{ Name = 'bookingdb'; Image = 'stable/postgresql'}
 $infras.Add($newRec3)
@@ -51,14 +51,13 @@ $infras.Add($newRec6)
 $newRec7 = [InfraRecord] @{ Name = 'rabbitmq'; Image = 'stable/rabbitmq'}
 $infras.Add($newRec7)
 
-# $newRec8 = [InfraRecord] @{ Name = 'elasticsearch' }
-# $infras.Add($newRec8)
+$newRec8 = [InfraRecord] @{ Name = 'elasticsearch' }
+$infras.Add($newRec8)
 
-# $newRec9 = [InfraRecord] @{ Name = 'kibana'; Image = 'stable/kibana'}
-# $infras.Add($newRec9)
+$newRec9 = [InfraRecord] @{ Name = 'kibana'; Image = 'stable/kibana'}
+$infras.Add($newRec9)
 
-$charts = ("identityservice", "apigateway", "bookingagg", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
-# "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
+$charts = ("identityservice", "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 
 if ($deployInfrastructure) {
     foreach ($infra in $infras) {

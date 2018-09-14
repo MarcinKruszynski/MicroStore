@@ -37,6 +37,7 @@ app:
       apigateway: apigateway
       bookingagg: bookingagg
       webapp: ""
+      webstatus: webstatus
   svc:
       identity: identityservice
       products: productservice
@@ -46,6 +47,7 @@ app:
       apigateway: apigateway
       bookingagg: bookingagg
       webapp: webapp
+      webstatus: webstatus
 
 ingress:
   annotations:

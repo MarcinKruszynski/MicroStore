@@ -57,7 +57,7 @@ $infras.Add($newRec7)
 # $newRec9 = [InfraRecord] @{ Name = 'kibana'; Image = 'stable/kibana'}
 # $infras.Add($newRec9)
 
-$charts = ("identityservice", "apigateway", "bookingagg", "bookingservice", "paymentservice", "notificationservice", "webapp")
+$charts = ("identityservice", "apigateway", "bookingagg", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 # "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 
 if ($deployInfrastructure) {

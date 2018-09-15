@@ -118,6 +118,18 @@ namespace IdentityService
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            var pathBase = Configuration["PATH_BASE"];
+            if (!string.IsNullOrEmpty(pathBase))
+            {
+                //app.UsePathBase(pathBase);
+
+                app.Use(async (context, next) =>
+                {
+                    context.Request.PathBase = pathBase;
+                    await next.Invoke();
+                });
+            }
+
             app.UseStaticFiles();
 
             //app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());

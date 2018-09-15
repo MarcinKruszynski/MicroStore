@@ -1,4 +1,5 @@
 replicaCount: 1
+pathBase: /products
 
 image:
   repository: marcinkruszynski/productservice

@@ -51,6 +51,18 @@ namespace PaymentService
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            var pathBase = Configuration["PATH_BASE"];
+            if (!string.IsNullOrEmpty(pathBase))
+            {
+                //app.UsePathBase(pathBase);
+
+                app.Use(async (context, next) =>
+                {
+                    context.Request.PathBase = pathBase;
+                    await next.Invoke();
+                });
+            }
+
             app.UseMvc();
         }
 

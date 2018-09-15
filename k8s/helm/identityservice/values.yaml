@@ -1,4 +1,5 @@
 replicaCount: 1
+pathBase: /identity
 
 image:
   repository: marcinkruszynski/identityservice

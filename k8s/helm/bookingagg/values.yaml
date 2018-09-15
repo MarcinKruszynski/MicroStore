@@ -1,4 +1,5 @@
 replicaCount: 1
+pathBase: /bookingagg
 
 image:
   repository: marcinkruszynski/bookingagg

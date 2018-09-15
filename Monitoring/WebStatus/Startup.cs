@@ -53,7 +53,13 @@ namespace WebStatus
             var pathBase = Configuration["PATH_BASE"];
             if (!string.IsNullOrEmpty(pathBase))
             {
-                app.UsePathBase(pathBase);
+                //app.UsePathBase(pathBase);
+
+                app.Use(async (context, next) =>
+                {
+                    context.Request.PathBase = pathBase;
+                    await next.Invoke();
+                });
             }
 
 

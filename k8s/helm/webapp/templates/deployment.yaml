@@ -28,8 +28,8 @@ spec:
               value: Development
             - name: IdentityUrl
               value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
-            - name: ProductUrl
-              value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.products }}
+            - name: GatewayApiUrl
+              value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.apigateway }}
             - name: IdentityUrlHC
               value: http://{{ .Values.app.svc.identity }}/hc
             - name: ProductUrlHC

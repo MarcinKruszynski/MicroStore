@@ -9,6 +9,41 @@ notifyBtn.disabled = true;
 let isSubscribed = false;
 let swRegistration = null;
 
+var re = new RegExp(/^.*\//);
+const baseURI = re.exec(window.location.href);
+let url = `${baseURI}Home/Configuration`;
+var serverSettings;
+var mgr;
+
+fetch(url)
+    .then(function (response) {
+        return response.json();
+    })
+    .then(function (myJson) {
+        serverSettings = myJson;
+
+        var config = {
+            authority: serverSettings.identityUrl,
+            client_id: "spa",
+            redirect_uri: `${baseURI}callback.html`,
+            response_type: "id_token token",
+            scope: "openid profile products booking notification bookingagg",
+            post_logout_redirect_uri: `${baseURI}index.html`
+        };
+
+        mgr = new Oidc.UserManager(config);
+
+        mgr.getUser().then(function (user) {
+            if (user) {
+                log("User logged in", user.profile);
+            }
+            else {
+                log("User not logged in");
+            }
+        });
+    });
+
+
 function urlB64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding)
@@ -53,9 +88,9 @@ notifyBtn.addEventListener('click', function (evt) {
                 applicationServerKey: urlB64ToUint8Array(pubKey)
             })
             .then(s => {
-                if (mgr)
+                if (mgr && serverSettings)
                     mgr.getUser().then(function (user) {
-                        var url = "http://localhost:5200/api/v1/n/notifications";
+                        var url = `${serverSettings.gatewayApiUrl}/api/v1/n/notifications`; 
 
                         fetch(url, {
                             method: 'post',
@@ -139,25 +174,6 @@ xhr.onload = function () {
 xhr.send();
 */
 
-var config = {
-    authority: "http://localhost:5201",
-    client_id: "spa",
-    redirect_uri: "http://localhost:5100/callback.html",
-    response_type: "id_token token",
-    scope: "openid profile products booking notification bookingagg",
-    post_logout_redirect_uri: "http://localhost:5100/index.html",
-};
-var mgr = new Oidc.UserManager(config);
-
-mgr.getUser().then(function (user) {
-    if (user) {
-        log("User logged in", user.profile);
-    }
-    else {
-        log("User not logged in");
-    }
-});
-
 
 function login() {
     if (mgr)
@@ -165,10 +181,9 @@ function login() {
 }
 
 function api() {
-    if (mgr /*&& serverSettings*/)
+    if (mgr && serverSettings)
         mgr.getUser().then(function (user) {
-            //var url = serverSettings.productUrl + "/api/v1/products";
-            var url = "http://localhost:5200/api/v1/p/products";
+            var url = `${serverSettings.gatewayApiUrl}/api/v1/p/products`;
 
             var xhr = new XMLHttpRequest();
             xhr.open("GET", url);
@@ -188,9 +203,9 @@ function newGuid() {
 }
 
 function checkout() {
-    if (mgr)
-        mgr.getUser().then(function (user) {            
-            var url = "http://localhost:5200/api/v1/b/bookings/checkout";
+    if (mgr && serverSettings)
+        mgr.getUser().then(function (user) {
+            var url = `${serverSettings.gatewayApiUrl}/api/v1/b/bookings/checkout`;
 
             var guid = newGuid();
 
@@ -216,9 +231,9 @@ function checkout() {
 }
 
 function checkout2() {
-    if (mgr)
+    if (mgr && serverSettings)
         mgr.getUser().then(function (user) {
-            var url = "http://localhost:5200/api/v1/booking/book";             
+            var url = `${serverSettings.gatewayApiUrl}/api/v1/booking/book`;
 
             var data = {                
                 productId: 2,                

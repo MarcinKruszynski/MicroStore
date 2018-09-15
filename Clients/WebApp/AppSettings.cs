@@ -8,6 +8,6 @@ namespace WebApp
     public class AppSettings
     {
         public string IdentityUrl { get; set; }
-        public string ProductUrl { get; set; }
+        public string GatewayApiUrl { get; set; }
     }
 }

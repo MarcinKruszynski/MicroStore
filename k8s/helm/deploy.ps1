@@ -51,11 +51,11 @@ $infras.Add($newRec6)
 $newRec7 = [InfraRecord] @{ Name = 'rabbitmq'; Image = 'stable/rabbitmq'}
 $infras.Add($newRec7)
 
-$newRec8 = [InfraRecord] @{ Name = 'elasticsearch' }
-$infras.Add($newRec8)
+# $newRec8 = [InfraRecord] @{ Name = 'elasticsearch' }
+# $infras.Add($newRec8)
 
-$newRec9 = [InfraRecord] @{ Name = 'kibana'; Image = 'stable/kibana'}
-$infras.Add($newRec9)
+# $newRec9 = [InfraRecord] @{ Name = 'kibana'; Image = 'stable/kibana'}
+# $infras.Add($newRec9)
 
 $charts = ("identityservice", "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 

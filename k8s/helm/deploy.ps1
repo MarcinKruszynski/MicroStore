@@ -72,6 +72,8 @@ if ($deployInfrastructure) {
            helm install --name $($infra.Name) -f ./$($infra.Name)/values.yaml $($infra.Image)
 		}
     }
+
+	Start-Sleep -Seconds 120
 }
 
 foreach ($chart in $charts) {

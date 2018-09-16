@@ -6,7 +6,7 @@ postgresPassword: password
 
 ## Create a database
 ## Default: the postgres user
-postgresDatabase: postgres
+postgresDatabase: paymentdb
 
 ## Persist data to a persistent volume
 persistence:

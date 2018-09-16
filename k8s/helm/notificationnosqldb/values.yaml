@@ -2,7 +2,7 @@
 
 # mongodbUsername: username
 # mongodbPassword: password
-# mongodbDatabase: database
+mongodbDatabase: notificationnosqldb
 
 
 ## Enable persistence using Persistent Volume Claims

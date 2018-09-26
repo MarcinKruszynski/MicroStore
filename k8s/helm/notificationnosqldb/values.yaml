@@ -1,6 +1,6 @@
 # mongodbRootPassword:
 
-# mongodbUsername: username
+mongodbUsername: username
 # mongodbPassword: password
 mongodbDatabase: notificationnosqldb
 

@@ -40,7 +40,7 @@ spec:
             - name: ConnectionStrings__DefaultConnection
               value: Host={{ .Values.inf.postgresql.identity.host }};Database={{ .Values.inf.postgresql.identity.database }};Username={{ .Values.inf.postgresql.common.user }};Password={{ .Values.inf.postgresql.common.password }}
             - name: IdentityUrl
-              value: http://{{ .Values.app.svc.identity }}
+              value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
             - name: SpaClient
               value: http://{{ .Values.inf.k8s.dns }}
             - name: ProductsClient

@@ -31,7 +31,7 @@ spec:
             - name: ConnectionStrings__DefaultConnection
               value: Host={{ .Values.inf.postgresql.booking.host }};Database={{ .Values.inf.postgresql.booking.database }};Username={{ .Values.inf.postgresql.common.user }};Password={{ .Values.inf.postgresql.common.password }}
             - name: IdentityUrl
-              value: http://{{ .Values.app.svc.identity }}
+              value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
             - name: IdentityUrlExternal
               value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
             - name: EventBusConnection

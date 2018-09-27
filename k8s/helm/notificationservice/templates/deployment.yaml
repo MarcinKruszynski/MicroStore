@@ -35,7 +35,7 @@ spec:
             - name: MongoDatabase
               value: {{ .Values.inf.mongo.notifications.database }}
             - name: IdentityUrl
-              value: http://{{ .Values.app.svc.identity }}
+              value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
             - name: EventBusConnection
               value: {{ .Values.inf.eventbus.connection }}
             - name: EventBusUserName

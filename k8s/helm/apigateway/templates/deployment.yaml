@@ -36,7 +36,7 @@ spec:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
             - name: IdentityUrl
-              value: http://{{ .Values.app.svc.identity }}
+              value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
           ports:
             - name: http
               containerPort: 80

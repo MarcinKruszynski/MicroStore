@@ -33,7 +33,7 @@ spec:
             - name: ElasticUrl
               value: http://{{ .Values.inf.elasticsearch.host }}:9200
             - name: IdentityUrl
-              value: http://{{ .Values.app.svc.identity }}
+              value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
             - name: IdentityUrlExternal
               value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
             - name: EventBusConnection

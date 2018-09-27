@@ -145,7 +145,7 @@ namespace BookingService
             app.UseSwagger()
               .UseSwaggerUI(c =>
               {
-                  c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookingService V1");
+                  c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/v1/swagger.json", "BookingService V1");
                   c.OAuthClientId("bookingswaggerui");
                   c.OAuthAppName("Booking Swagger UI");
               });

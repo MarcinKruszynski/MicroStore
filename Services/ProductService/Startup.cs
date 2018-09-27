@@ -145,7 +145,7 @@ namespace ProductService
             app.UseSwagger()
               .UseSwaggerUI(c =>
               {
-                  c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductService V1");                  
+                  c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/v1/swagger.json", "ProductService V1");                  
                   c.OAuthClientId("productsswaggerui");
                   c.OAuthAppName("Products Swagger UI");
               });            

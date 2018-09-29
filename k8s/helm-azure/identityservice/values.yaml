@@ -1,0 +1,25 @@
+replicaCount: 1
+pathBase: /identity
+
+image:
+  repository: marcinkruszynski/identityservice
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  path: /identity
+  annotations: {}
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

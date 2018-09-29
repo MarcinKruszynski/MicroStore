@@ -1,0 +1,62 @@
+inf:
+  postgresql:
+    common:
+      user: postgres
+      password: password
+    identity:
+      host: identitydb-postgresql
+      database: identitydb
+    products:
+      host: productdb-postgresql
+      database: productdb
+    booking:
+      host: bookingdb-postgresql
+      database: bookingdb
+    payments:
+      host: paymentdb-postgresql
+      database: paymentdb
+    notifications:
+      host: notificationdb-postgresql
+      database: notificationdb
+  mongo:
+    notifications:
+      host: notificationnosqldb
+      database: PushSubscriptionDb
+  eventbus:
+    connection: ""
+    user: ""
+    password: ""
+    useAzure: true
+  elasticsearch:
+    host: elasticsearch-client
+  k8s:
+    dns:  ""
+
+app:
+  ingress:
+    entries:
+      identity: identity
+      products: products
+      booking: booking
+      payments: payments
+      notifications: notifications
+      apigateway: apigateway
+      bookingagg: bookingagg
+      webapp: ""
+      webstatus: webstatus
+  svc:
+      identity: identityservice
+      products: productservice
+      booking: bookingservice
+      payments: paymentservice
+      notifications: notificationservice
+      apigateway: apigateway
+      bookingagg: bookingagg
+      webapp: webapp
+      webstatus: webstatus
+
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"

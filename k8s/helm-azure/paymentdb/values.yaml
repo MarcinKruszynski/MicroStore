@@ -1,0 +1,17 @@
+## Create a database user
+## Default: postgres
+postgresUser: postgres
+## Default: random 10 character string
+postgresPassword: password
+
+## Create a database
+## Default: the postgres user
+postgresDatabase: paymentdb
+
+## Persist data to a persistent volume
+persistence:
+  enabled: true
+  
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  subPath: "postgresql-paymentdb"

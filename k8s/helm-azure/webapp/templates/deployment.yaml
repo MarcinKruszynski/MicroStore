@@ -1,0 +1,62 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "webapp.fullname" . }}
+  labels:
+    app: {{ template "webapp.name" . }}
+    chart: {{ template "webapp.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "webapp.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "webapp.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PATH_BASE
+              value: {{ .Values.pathBase }}
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: IdentityUrl
+              value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
+            - name: GatewayApiUrl
+              value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.apigateway }}
+            - name: IdentityUrlHC
+              value: http://{{ .Values.app.svc.identity }}/hc
+            - name: ProductUrlHC
+              value: http://{{ .Values.app.svc.products }}/hc
+            - name: BookingUrlHC
+              value: http://{{ .Values.app.svc.booking }}/hc
+            - name: PaymentUrlHC
+              value: http://{{ .Values.app.svc.payments }}/hc
+            - name: NotificationUrlHC
+              value: http://{{ .Values.app.svc.notifications }}/hc
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

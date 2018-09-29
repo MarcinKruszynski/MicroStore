@@ -1,0 +1,25 @@
+replicaCount: 1
+pathBase: /products
+
+image:
+  repository: marcinkruszynski/productservice
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  path: /products
+  annotations: {}
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

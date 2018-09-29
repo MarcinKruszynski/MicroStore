@@ -1,0 +1,62 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "webstatus.fullname" . }}
+  labels:
+    app: {{ template "webstatus.name" . }}
+    chart: {{ template "webstatus.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "webstatus.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "webstatus.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PATH_BASE
+              value: {{ .Values.pathBase }}
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_URLS
+              value: http://0.0.0.0:80
+            - name: IdentityUrl
+              value: http://{{ .Values.app.svc.identity }}/hc
+            - name: ProductUrl
+              value: http://{{ .Values.app.svc.products }}/hc
+            - name: BookingUrl
+              value: http://{{ .Values.app.svc.booking }}/hc
+            - name: PaymentUrl
+              value: http://{{ .Values.app.svc.payments }}/hc
+            - name: NotificationUrl
+              value: http://{{ .Values.app.svc.notifications }}/hc
+            - name: spa
+              value: http://{{ .Values.app.svc.webapp }}/hc
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

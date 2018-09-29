@@ -1,0 +1,25 @@
+replicaCount: 1
+pathBase: /bookingagg
+
+image:
+  repository: marcinkruszynski/bookingagg
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  path: /bookingagg
+  annotations: {}
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

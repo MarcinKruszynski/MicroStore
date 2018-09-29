@@ -1,0 +1,62 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "notificationservice.fullname" . }}
+  labels:
+    app: {{ template "notificationservice.name" . }}
+    chart: {{ template "notificationservice.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "notificationservice.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "notificationservice.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PATH_BASE
+              value: {{ .Values.pathBase }}
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ConnectionStrings__DefaultConnection
+              value: Host={{ .Values.inf.postgresql.notifications.host }};Database={{ .Values.inf.postgresql.notifications.database }};Username={{ .Values.inf.postgresql.common.user }};Password={{ .Values.inf.postgresql.common.password }}
+            - name: MongoConnectionString
+              value: mongodb://{{ .Values.inf.mongo.notifications.host }}
+            - name: MongoDatabase
+              value: {{ .Values.inf.mongo.notifications.database }}
+            - name: IdentityUrl
+              value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
+            - name: EventBusConnection
+              value: {{ .Values.inf.eventbus.connection }}
+            - name: EventBusUserName
+              value: {{ .Values.inf.eventbus.user }}
+            - name: EventBusPassword
+              value: {{ .Values.inf.eventbus.password }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

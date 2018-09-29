@@ -1,0 +1,25 @@
+replicaCount: 1
+pathBase: /booking
+
+image:
+  repository: marcinkruszynski/bookingservice
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  path: /booking
+  annotations: {}
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

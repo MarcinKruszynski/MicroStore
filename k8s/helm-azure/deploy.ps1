@@ -66,6 +66,9 @@ $infras.Add($newRec5)
 $newRec6 = [InfraRecord] @{ Name = 'notificationnosqldb'; Image = 'stable/mongodb'}
 $infras.Add($newRec6)
 
+$newRec7 = [InfraRecord] @{ Name = 'rabbitmq'; Image = 'stable/rabbitmq'}
+$infras.Add($newRec7)
+
 
 $charts = ("identityservice", "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 

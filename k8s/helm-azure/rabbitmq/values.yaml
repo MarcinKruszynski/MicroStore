@@ -1,0 +1,29 @@
+## section of specific values for rabbitmq
+rabbitmq:
+  
+  username: guest # user 
+  password: guest
+
+  # nodePort: 5672
+  # managerPort: 15672
+ 
+  # diskFreeLimit: '"6GiB"'
+  diskFreeLimit: '"1GiB"'
+
+persistence:
+  ## this enables PVC templates that will create one per pod
+  enabled: true
+
+  ## rabbitmq data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+
+  # If you change this value, you might have to adjust `rabbitmq.diskFreeLimit` as well.
+  # size: 8Gi
+  size: 2Gi

@@ -23,10 +23,10 @@ inf:
       host: notificationnosqldb
       database: PushSubscriptionDb
   eventbus:
-    connection: ""
-    user: ""
-    password: ""
-    useAzure: true
+    connection: rabbitmq
+    user: guest
+    password: guest
+    useAzure: false
   elasticsearch:
     host: elasticsearch-client
   k8s:

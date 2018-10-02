@@ -21,7 +21,7 @@ if ($createAcr -eq $true) {
 
 # Create kubernetes cluster in AKS
 Write-Host "Creating Kubernetes cluster in AKS..." -ForegroundColor Yellow
-az aks create --resource-group=$resourceGroupName --name=$serviceName --dns-name-prefix=$dnsNamePrefix --generate-ssh-keys --node-count=$nodeCount --node-vm-size=$nodeVMSize
+az aks create --resource-group=$resourceGroupName --name=$serviceName --dns-name-prefix=$dnsNamePrefix --generate-ssh-keys --node-count=$nodeCount --node-vm-size=$nodeVMSize --kubernetes-version 1.10.3
 
 # Retrieve kubernetes cluster configuration and save it under ~/.kube/config
 Write-Host "Getting Kubernetes config..." -ForegroundColor Yellow

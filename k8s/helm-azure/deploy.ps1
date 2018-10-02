@@ -86,7 +86,7 @@ if ($deployInfrastructure) {
 		}
     }
 
-	Start-Sleep -Seconds 120
+	Start-Sleep -Seconds 300
 }
 
 foreach ($chart in $charts) {

@@ -1,4 +1,5 @@
-Param(    
+Param(
+    [parameter(Mandatory=$false)][string]$registry,
     [parameter(Mandatory=$false)][string]$dockerUser,
     [parameter(Mandatory=$false)][string]$dockerPassword,
     [parameter(Mandatory=$false)][string]$externalDns="localhost",
@@ -44,6 +45,16 @@ if ($clean) {
     Write-Host "Previous releases deleted" -ForegroundColor Green
 }
 
+$useCustomRegistry=$false
+
+if (-not [string]::IsNullOrEmpty($registry)) {
+    $useCustomRegistry=$true
+    if ([string]::IsNullOrEmpty($dockerUser) -or [string]::IsNullOrEmpty($dockerPassword)) {
+        Write-Host "Error: Must use -dockerUser AND -dockerPassword if specifying custom registry" -ForegroundColor Red
+        exit 1
+    }
+}
+
 Write-Host "Begin MicroStore installation using Helm" -ForegroundColor Green
 
 $infras = [System.Collections.Generic.List[InfraRecord]]::new()
@@ -70,7 +81,7 @@ $newRec7 = [InfraRecord] @{ Name = 'rabbitmq'; Image = 'stable/rabbitmq'}
 $infras.Add($newRec7)
 
 
-$charts = ("identityservice", "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
+$charts = ("microstorecommon", "identityservice", "apigateway", "bookingagg", "productservice", "bookingservice", "paymentservice", "notificationservice", "webapp", "webstatus")
 
 if ($deployInfrastructure) {
     foreach ($infra in $infras) {
@@ -91,8 +102,14 @@ if ($deployInfrastructure) {
 
 foreach ($chart in $charts) {
     Write-Host "Installing: $chart" -ForegroundColor Green
-
-    helm install --values app.yaml --set inf.k8s.dns=$dns --name="$chart" $chart
+    if ($useCustomRegistry) {
+        helm install --set inf.registry.server=$registry --set inf.registry.login=$dockerUser --set inf.registry.pwd=$dockerPassword --set inf.registry.secretName=microstore-docker-secret --values app.yaml --set inf.k8s.dns=$dns --name="$chart" $chart
+    }
+    else {
+        if ($chart -ne "microstorecommon")  { 
+            helm install --values app.yaml --set inf.k8s.dns=$dns --name="$chart" $chart
+        }
+    }
 }
 
 Write-Host "helm charts installed." -ForegroundColor Green

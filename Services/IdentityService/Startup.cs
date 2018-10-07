@@ -14,13 +14,16 @@ using System.IO;
 using IdentityServer4.Services;
 using System;
 using MicroStore.Extensions.HealthChecks;
+using IdentityService.Certificates;
+using Microsoft.Extensions.Logging;
 
 namespace IdentityService
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
-        {
+        {              
             Configuration = configuration;
         }
 
@@ -69,13 +72,13 @@ namespace IdentityService
             //    .AddDeveloperSigningCredential()
             //    .AddAspNetIdentity<ApplicationUser>();   
 
-            var keyFileOptions = Configuration.GetSection("SigninKeyCredentials");
-            var keyFileName = keyFileOptions.GetValue<string>("KeyFileName");
-            var keyFilePath = Path.Combine("cert", keyFileName);
-            var keyFilePassword = keyFileOptions.GetValue<string>("KeyFilePassword");
+            //var keyFileOptions = Configuration.GetSection("SigninKeyCredentials");
+            //var keyFileName = keyFileOptions.GetValue<string>("KeyFileName");
+            //var keyFilePath = Path.Combine("cert", keyFileName);
+            //var keyFilePassword = keyFileOptions.GetValue<string>("KeyFilePassword");            
 
             services.AddIdentityServer(opt => opt.IssuerUri = identityUrl)
-                .AddSigningCredential(new X509Certificate2(keyFilePath, keyFilePassword))                
+                .AddSigningCredential(Certificate.Get() /*new X509Certificate2(keyFilePath, keyFilePassword)*/)                
                 .AddAspNetIdentity<ApplicationUser>()
                 // this adds the config data from DB (clients, resources)
                 .AddConfigurationStore(options =>

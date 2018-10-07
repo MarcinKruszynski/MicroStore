@@ -27,7 +27,7 @@ namespace IdentityService
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(ic => ic.AddJsonFile(Path.Combine("cert", "configuration.json")))
+                //.ConfigureAppConfiguration(ic => ic.AddJsonFile(Path.Combine("cert", "configuration.json")))
                 .UseStartup<Startup>()
                 .UseHealthChecks("/hc")
                 .Build();

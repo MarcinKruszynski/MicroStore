@@ -18,16 +18,7 @@ spec:
       labels:
         app: {{ template "identityservice.name" . }}
         release: {{ .Release.Name }}
-    spec:
-      volumes:
-        - name: config
-          configMap:
-            name: cfg-{{ template "identityservice.name" . }}
-            items:
-            - key: configuration.json
-              path: configuration.json
-            - key: idsrv3test.pfx
-              path: idsrv3test.pfx
+    spec:      
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -50,11 +41,7 @@ spec:
           ports:
             - name: http
               containerPort: 80
-              protocol: TCP
-          volumeMounts:
-            - name: config
-              mountPath: /app/cert
-              readOnly: true
+              protocol: TCP          
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}

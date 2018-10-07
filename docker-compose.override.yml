@@ -79,8 +79,8 @@ services:
       - BookingClient=http://${EXTERNAL_DNS_NAME_OR_IP}:5102
     ports:
       - "5201:80"
-    volumes:
-      - ./Services/identitycert:/app/cert
+#    volumes:
+#      - ./Services/identitycert:/app/cert
 
   apigateway:
     environment:

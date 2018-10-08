@@ -23,6 +23,7 @@ Sample ASP.NET Core microservice app using:
 - Kibana
 - Kubernetes
 - Helm
+- Azure AKS
 
 To be continued
 

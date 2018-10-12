@@ -29,7 +29,7 @@ namespace BookingService.Sagas
             Data.UserId = message.UserId;
 
             var bookingStockItem = new BookingStockItem(message.ProductId, message.Units);
-            var ev = new BookingStatusChangedToCheckingAvailabilityIntegrationEvent(message.BookingId, bookingStockItem);
+            var ev = new BookingStatusChangedToCheckIntegrationEvent(message.BookingId, bookingStockItem);
 
             await context.Publish(ev);             
         }
@@ -38,7 +38,7 @@ namespace BookingService.Sagas
         {
             Data.StockConfirmed = true;
 
-            var ev = new BookingStatusChangedToStockConfirmedIntegrationEvent(message.BookingId);
+            var ev = new BookingStatusStockConfirmedIntegrationEvent(message.BookingId);
 
             await context.Publish(ev);
         }

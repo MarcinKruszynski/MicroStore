@@ -1,11 +1,11 @@
 ﻿namespace MicroStore.Services.IntegrationEvents.Events
 {
-    public class BookingStatusChangedToCheckingAvailabilityIntegrationEvent
+    public class BookingStatusChangedToCheckIntegrationEvent
     {
         public int BookingId { get; set; }
         public BookingStockItem BookingStockItem { get; set; }        
 
-        public BookingStatusChangedToCheckingAvailabilityIntegrationEvent(
+        public BookingStatusChangedToCheckIntegrationEvent(
             int bookingId, BookingStockItem bookingStockItem)
         {
             BookingId = bookingId;

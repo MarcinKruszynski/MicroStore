@@ -34,6 +34,8 @@ spec:
               value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
             - name: IdentityUrlExternal
               value: http://{{ .Values.inf.k8s.dns }}/{{ .Values.app.ingress.entries.identity }}
+            - name: AzureServiceBusEnabled
+              value: "{{ .Values.inf.eventbus.useAzure }}"
             - name: EventBusConnection
               value: {{ .Values.inf.eventbus.connection }}
             - name: EventBusUserName

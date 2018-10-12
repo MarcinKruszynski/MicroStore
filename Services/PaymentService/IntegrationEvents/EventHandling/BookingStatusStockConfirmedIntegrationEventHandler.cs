@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 
 namespace PaymentService.IntegrationEvents.EventHandling
 {
-    public class BookingStatusChangedToStockConfirmedIntegrationEventHandler:
-        IHandleMessages<BookingStatusChangedToStockConfirmedIntegrationEvent>
+    public class BookingStatusStockConfirmedIntegrationEventHandler:
+        IHandleMessages<BookingStatusStockConfirmedIntegrationEvent>
     {
-        public BookingStatusChangedToStockConfirmedIntegrationEventHandler()
+        public BookingStatusStockConfirmedIntegrationEventHandler()
         {
         }
 
-        public async Task Handle(BookingStatusChangedToStockConfirmedIntegrationEvent message, IMessageHandlerContext context)
+        public async Task Handle(BookingStatusStockConfirmedIntegrationEvent message, IMessageHandlerContext context)
         {
             if (message.BookingId % 2 == 0)
             {

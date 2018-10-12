@@ -26,6 +26,7 @@ inf:
     connection: rabbitmq
     user: guest
     password: guest
+    useAzure: false
   elasticsearch:
     host: elasticsearch-client
   k8s:

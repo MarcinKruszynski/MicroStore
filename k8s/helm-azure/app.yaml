@@ -24,9 +24,11 @@ inf:
       database: PushSubscriptionDb
   eventbus:
     connection: rabbitmq
+  # connection: "Endpoint=sb://albania365.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=uRAILiWQskgzfoZLrLbVJTkoUkBNDvYTb7JlIlRTkZA="
     user: guest
     password: guest
     useAzure: false
+  # useAzure: true
   elasticsearch:
     host: elasticsearch-client
   k8s:

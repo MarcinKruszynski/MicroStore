@@ -107,6 +107,7 @@ services:
       - ElasticUrl=http://elasticsearch:9200
       - IdentityUrl=http://identityservice 
       - IdentityUrlExternal=http://${EXTERNAL_DNS_NAME_OR_IP}:5201
+      - AzureServiceBusEnabled=False
       - EventBusConnection=rabbitmq
       - EventBusUserName=guest
       - EventBusPassword=guest  
@@ -119,6 +120,7 @@ services:
       - "ConnectionStrings:DefaultConnection=Host=bookingdb;Database=bookingdb;Username=postgres;Password=password"
       - IdentityUrl=http://identityservice
       - IdentityUrlExternal=http://${EXTERNAL_DNS_NAME_OR_IP}:5201
+      - AzureServiceBusEnabled=False
       - EventBusConnection=rabbitmq
       - EventBusUserName=guest
       - EventBusPassword=guest 
@@ -129,6 +131,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:DefaultConnection=Host=paymentdb;Database=paymentdb;Username=postgres;Password=password"      
+      - AzureServiceBusEnabled=False
       - EventBusConnection=rabbitmq
       - EventBusUserName=guest
       - EventBusPassword=guest 
@@ -142,6 +145,7 @@ services:
       - MongoConnectionString=mongodb://notificationnosqldb     
       - MongoDatabase=PushSubscriptionDb
       - IdentityUrl=http://identityservice
+      - AzureServiceBusEnabled=False
       - EventBusConnection=rabbitmq
       - EventBusUserName=guest
       - EventBusPassword=guest 

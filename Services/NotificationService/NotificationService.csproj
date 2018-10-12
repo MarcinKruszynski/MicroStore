@@ -15,13 +15,18 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="3.1.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
     <PackageReference Include="Npgsql" Version="4.0.1" />
     <PackageReference Include="NServiceBus.Autofac" Version="7.0.0" />
     <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.1.0" />
-    <PackageReference Include="NServiceBus.Persistence.Sql" Version="4.1.1" />
-    <PackageReference Include="NServiceBus.Persistence.Sql.MsBuild" Version="4.1.1" />
-    <PackageReference Include="NServiceBus.RabbitMQ" Version="5.0.0" />
+    <PackageReference Include="NServiceBus.Persistence.Sql" Version="4.2.0" />
+    <PackageReference Include="NServiceBus.Persistence.Sql.MsBuild" Version="4.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NServiceBus.RabbitMQ" Version="5.0.1" />
+    <PackageReference Include="NServiceBus.Transport.AzureServiceBus" Version="1.0.0-alpha0164" />
     <PackageReference Include="Polly" Version="6.0.1" />
     <PackageReference Include="WebPush" Version="1.0.11" />
   </ItemGroup>  

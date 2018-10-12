@@ -68,11 +68,14 @@ namespace PaymentService
 
         IContainer RegisterEventBus(ContainerBuilder containerBuilder, IServiceCollection services)
         {
+            var useAzureServiceBus = Configuration.GetValue<bool>("AzureServiceBusEnabled");
+
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             EnsurePostgreSqlDatabaseExistsAsync(connectionString).Wait();
 
-            EnsureRabbitConnectionExists(services);
+            if (!useAzureServiceBus)
+                EnsureRabbitConnectionExists(services);
 
             IEndpointInstance endpoint = null;
             containerBuilder.Register(c => endpoint)
@@ -83,10 +86,20 @@ namespace PaymentService
 
             var endpointConfiguration = new EndpointConfiguration("Payment");
 
-            // Configure RabbitMQ transport
-            var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
-            transport.UseConventionalRoutingTopology();
-            transport.ConnectionString(GetRabbitConnectionString());
+            if (useAzureServiceBus)
+            {
+                // Configure Azure Service Bus transport
+                var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
+                var connStr = Configuration["EventBusConnection"];
+                transport.ConnectionString(connStr);
+            }
+            else
+            {
+                // Configure RabbitMQ transport
+                var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
+                transport.UseConventionalRoutingTopology();
+                transport.ConnectionString(GetRabbitConnectionString());
+            }            
 
             // Configure persistence
             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();

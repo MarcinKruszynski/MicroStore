@@ -1,4 +1,4 @@
-﻿namespace MicroStore.Services.IntegrationEvents.Events
+﻿namespace /*MicroStore.Services.IntegrationEvents.*/Events
 {
     public class BookingStatusStockConfirmedIntegrationEvent
     {

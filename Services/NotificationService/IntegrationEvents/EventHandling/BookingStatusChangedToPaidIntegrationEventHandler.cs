@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using MicroStore.Services.IntegrationEvents.Events;
+using /*MicroStore.Services.IntegrationEvents.*/Events;
 using Newtonsoft.Json;
 using NotificationService.Interfaces;
 using NServiceBus;

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using MicroStore.Services.IntegrationEvents.Events;
+using /*MicroStore.Services.IntegrationEvents.*/Events;
 using NServiceBus;
 using ProductService.Data;
 

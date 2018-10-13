@@ -1,4 +1,4 @@
-﻿using MicroStore.Services.IntegrationEvents.Events;
+﻿using /*MicroStore.Services.IntegrationEvents.*/Events;
 using NServiceBus;
 using System.Threading.Tasks;
 

@@ -7,7 +7,7 @@ using BookingService.Model;
 using BookingService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MicroStore.Services.IntegrationEvents.Events;
+using /*MicroStore.Services.IntegrationEvents.*/Events;
 using NServiceBus;
 
 namespace BookingService.Controllers

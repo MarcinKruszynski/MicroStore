@@ -24,6 +24,7 @@ Sample ASP.NET Core microservice app using:
 - Kubernetes
 - Helm
 - Azure AKS
+- Azure Service Bus
 
 To be continued
 

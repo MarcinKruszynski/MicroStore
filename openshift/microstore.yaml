@@ -1,0 +1,229 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: microstore
+  annotations:
+    description: MicroStore .NET Core microservices application template
+    tags: microservice,dotnet
+    iconClass: icon-dotnet
+labels:
+  template: microstore
+objects:
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    name: default_edit
+  roleRef:
+    name: view
+  subjects:
+  - kind: ServiceAccount
+    name: default
+# Identity Service
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: "${IDENTITY_SERVICE_NAME}"
+  stringData:
+    database-password: "${DATABASE_PASSWORD}"
+    connect-string: Host=${IDENTITY_DATABASE_SERVICE_NAME};Database=${IDENTITY_DATABASE_NAME};Username=${DATABASE_USER};Password=${DATABASE_PASSWORD}
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: "${IDENTITY_DATABASE_SERVICE_NAME}"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: "${VOLUME_POSTGRESQL_CAPACITY}"
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${IDENTITY_DATABASE_SERVICE_NAME}"
+    annotations:
+      description: Exposes the database server
+  spec:
+    ports:
+    - port: 5432
+      targetPort: 5432
+    selector:
+      name: "${IDENTITY_DATABASE_SERVICE_NAME}"
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${IDENTITY_DATABASE_SERVICE_NAME}"
+    annotations:
+      description: Defines how to deploy the database
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - "${IDENTITY_DATABASE_SERVICE_NAME}"
+        from:
+          kind: ImageStreamTag
+          namespace: openshift
+          name: postgresql:9.5
+    - type: ConfigChange
+    replicas: 1
+    selector:
+      name: "${IDENTITY_DATABASE_SERVICE_NAME}"
+    template:
+      metadata:
+        name: "${IDENTITY_DATABASE_SERVICE_NAME}"
+        labels:
+          name: "${IDENTITY_DATABASE_SERVICE_NAME}"
+      spec:
+        volumes:
+        - name: "${IDENTITY_DATABASE_SERVICE_NAME}-data"
+          persistentVolumeClaim:
+            claimName: "${IDENTITY_DATABASE_SERVICE_NAME}"
+        containers:
+        - name: "${IDENTITY_DATABASE_SERVICE_NAME}"
+          image: " "
+          ports:
+          - containerPort: 5432
+          readinessProbe:
+            timeoutSeconds: 1
+            initialDelaySeconds: 5
+            exec:
+              command:
+              - "/bin/sh"
+              - "-i"
+              - "-c"
+              - psql -h 127.0.0.1 -U ${POSTGRESQL_USER} -q -d ${POSTGRESQL_DATABASE}
+                -c 'SELECT 1'
+          livenessProbe:
+            timeoutSeconds: 1
+            initialDelaySeconds: 30
+            tcpSocket:
+              port: 5432
+          volumeMounts:
+          - name: "${IDENTITY_DATABASE_SERVICE_NAME}-data"
+            mountPath: "/var/lib/pgsql/data"
+          env:
+          - name: POSTGRESQL_USER
+            value: "${DATABASE_USER}"
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "${IDENTITY_SERVICE_NAME}"
+                key: database-password
+          - name: POSTGRESQL_DATABASE
+            value: "${IDENTITY_DATABASE_NAME}"
+          - name: POSTGRESQL_MAX_CONNECTIONS
+            value: "${POSTGRESQL_MAX_CONNECTIONS}"
+          - name: POSTGRESQL_SHARED_BUFFERS
+            value: "${POSTGRESQL_SHARED_BUFFERS}"
+          resources:
+            limits:
+              memory: "${MEMORY_POSTGRESQL_LIMIT}"
+parameters:
+- name: IDENTITY_SERVICE_NAME
+  displayName: IdentityService Name
+  description: The name assigned to all of the frontend objects defined in this template.
+  required: true
+  value: identityservice
+- name: MEMORY_LIMIT
+  displayName: Memory Limit
+  required: true
+  description: Maximum amount of memory the .NET Core container can use.
+  value: 128Mi
+- name: MEMORY_POSTGRESQL_LIMIT
+  displayName: Memory Limit (PostgreSQL)
+  required: true
+  description: Maximum amount of memory the PostgreSQL container can use.
+  value: 128Mi
+- name: VOLUME_POSTGRESQL_CAPACITY
+  displayName: Volume Capacity
+  description: Volume space available for data, e.g. 512Mi, 2Gi
+  value: 1Gi
+  required: true
+- name: DOTNET_IMAGE_STREAM_TAG
+  displayName: ".NET builder"
+  required: true
+  description: The image stream tag which is used to build the code.
+  value: dotnet:2.1
+- name: NAMESPACE
+  displayName: Namespace
+  required: true
+  description: The OpenShift Namespace where the .NET builder ImageStream resides.
+  value: openshift
+- name: SOURCE_REPOSITORY_URL
+  displayName: Git Repository URL
+  required: true
+  description: The URL of the repository with your application source code.
+  value: https://github.com/marcinkruszynski/webapp.git
+- name: SOURCE_REPOSITORY_REF
+  displayName: Git Reference
+  description: Set this to a branch name, tag or other ref of your repository if you
+    are not using the default branch.
+- name: CONTEXT_DIR
+  displayName: Context Directory
+  description: Set this to the relative path to your project if it is not in the root
+    of your repository.
+- name: DOTNET_STARTUP_PROJECT
+  displayName: Startup Project
+  description: Set this to a project file (e.g. csproj) or a folder containing a single
+    project file.
+  value: WebApp2
+- name: DOTNET_SDK_VERSION
+  displayName: SDK Version
+  description: Set this to configure the default SDK version. This can be set to a
+    specific version, '' (lowest version) or 'latest' (highest version).
+  value: ''
+- name: DOTNET_ASSEMBLY_NAME
+  displayName: Startup Assembly
+  description: Set this when the assembly name is overridden in the project file.
+- name: DOTNET_TOOLS
+  displayName: ".NET Tools"
+  description: Set this to a space separated list of .NET tools needed to publish.
+- name: DOTNET_NPM_TOOLS
+  displayName: Npm Tools
+  description: Set this to a space separated list of npm tools needed to publish.
+- name: DOTNET_TEST_PROJECTS
+  displayName: Test projects
+  description: Set this to a space separated list of test projects to run before publishing.
+- name: DOTNET_CONFIGURATION
+  displayName: Configuration
+  description: Set this to configuration (Release/Debug).
+  value: Release
+- name: DOTNET_RESTORE_SOURCES
+  displayName: NuGet package sources
+  description: Set this to override the NuGet.config sources.
+- name: APPLICATION_DOMAIN
+  displayName: Application Hostname
+  description: The exposed hostname that will route to the .NET Core service, if left
+    blank a value will be defaulted.
+  value: ''
+- name: GITHUB_WEBHOOK_SECRET
+  displayName: GitHub Webhook Secret
+  description: A secret string used to configure the GitHub webhook.
+  generate: expression
+  from: "[a-zA-Z0-9]{40}"
+- name: IDENTITY_DATABASE_SERVICE_NAME
+  required: true
+  displayName: Identity Database Service Name
+  value: identitydb
+- name: DATABASE_USER
+  displayName: Database Username
+  generate: expression
+  from: user[A-Z0-9]{3}
+- name: DATABASE_PASSWORD
+  displayName: Database Password
+  generate: expression
+  from: "[a-zA-Z0-9]{8}"
+- name: IDENTITY_DATABASE_NAME
+  required: true
+  displayName: Database Name
+  value: identitydb
+- name: POSTGRESQL_MAX_CONNECTIONS
+  displayName: Maximum Database Connections
+  value: '100'
+- name: POSTGRESQL_SHARED_BUFFERS
+  displayName: Shared Buffer Amount
+  value: 12MB

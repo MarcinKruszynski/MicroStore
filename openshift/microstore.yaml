@@ -27,6 +27,160 @@ objects:
   stringData:
     database-password: "${DATABASE_PASSWORD}"
     connect-string: Host=${IDENTITY_DATABASE_SERVICE_NAME};Database=${IDENTITY_DATABASE_NAME};Username=${DATABASE_USER};Password=${DATABASE_PASSWORD}
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${IDENTITY_SERVICE_NAME}"
+    annotations:
+      description: Exposes and load balances the application pods
+      service.alpha.openshift.io/dependencies: '[{"name": "${IDENTITY_DATABASE_SERVICE_NAME}",
+        "kind": "Service"}]'
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      targetPort: 8080
+    selector:
+      name: "${IDENTITY_SERVICE_NAME}"
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: "${IDENTITY_SERVICE_NAME}"
+  spec:
+    host: "${APPLICATION_DOMAIN}"
+    path: "/${IDENTITY_SERVICE_ROUTE_ENTRY}"
+    to:
+      kind: Service
+      name: "${IDENTITY_SERVICE_NAME}"
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: "${IDENTITY_SERVICE_NAME}"
+    annotations:
+      description: Keeps track of changes in the application image
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: "${IDENTITY_SERVICE_NAME}"
+    annotations:
+      description: Defines how to build the application
+  spec:
+    source:
+      type: Git
+      git:
+        uri: "${SOURCE_REPOSITORY_URL}"
+        ref: "${SOURCE_REPOSITORY_REF}"
+      contextDir: "${IDENTITY_SERVICE_CONTEXT_DIR}"
+    strategy:
+      type: Source
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          namespace: "${NAMESPACE}"
+          name: "${DOTNET_IMAGE_STREAM_TAG}"
+        env:
+        - name: DOTNET_STARTUP_PROJECT
+          value: "${IDENTITY_SERVICE_DOTNET_STARTUP_PROJECT}"
+        - name: DOTNET_SDK_VERSION
+          value: "${DOTNET_SDK_VERSION}"
+        - name: DOTNET_ASSEMBLY_NAME
+          value: "${DOTNET_ASSEMBLY_NAME}"
+        - name: DOTNET_NPM_TOOLS
+          value: "${DOTNET_NPM_TOOLS}"
+        - name: DOTNET_TEST_PROJECTS
+          value: "${DOTNET_TEST_PROJECTS}"
+        - name: DOTNET_CONFIGURATION
+          value: "${DOTNET_CONFIGURATION}"
+        - name: DOTNET_RESTORE_SOURCES
+          value: "${DOTNET_RESTORE_SOURCES}"
+        - name: DOTNET_TOOLS
+          value: "${DOTNET_TOOLS}"
+    output:
+      to:
+        kind: ImageStreamTag
+        name: "${IDENTITY_SERVICE_NAME}:latest"
+    triggers:
+    - type: ImageChange
+    - type: ConfigChange
+    - type: GitHub
+      github:
+        secret: "${GITHUB_WEBHOOK_SECRET}"
+    postCommit: {}
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${IDENTITY_SERVICE_NAME}"
+    annotations:
+      description: Defines how to deploy the application server
+  spec:
+    strategy:
+      type: Rolling
+      rollingParams:
+        updatePeriodSeconds: 1
+        intervalSeconds: 1
+        timeoutSeconds: 600
+        maxUnavailable: 25%
+        maxSurge: 25%
+      resources: {}
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - "${IDENTITY_SERVICE_NAME}"
+        from:
+          kind: ImageStreamTag
+          name: "${IDENTITY_SERVICE_NAME}:latest"
+    - type: ConfigChange
+    replicas: 1
+    selector:
+      name: "${IDENTITY_SERVICE_NAME}"
+    template:
+      metadata:
+        name: "${IDENTITY_SERVICE_NAME}"
+        labels:
+          name: "${IDENTITY_SERVICE_NAME}"
+      spec:
+        containers:
+        - name: "${IDENTITY_SERVICE_NAME}"
+          image: " "
+          ports:
+          - containerPort: 8080
+          env:
+          - name: PATH_BASE
+            value: "${IDENTITY_SERVICE_PATH_BASE}"
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Development
+          - name: ConnectionStrings__DefaultConnection
+            valueFrom:
+              secretKeyRef:
+                name: "${IDENTITY_SERVICE_NAME}"
+                key: connect-string
+          - name: IdentityUrl
+            value: "http://${APPLICATION_DOMAIN}/${IDENTITY_SERVICE_ROUTE_ENTRY}"
+          - name: SpaClient
+            value: "http://${APPLICATION_DOMAIN}"
+          - name: ProductsClient
+            value: "http://${APPLICATION_DOMAIN}/${PRODUCT_SERVICE_ROUTE_ENTRY}"
+          - name: BookingClient
+            value: "http://${APPLICATION_DOMAIN}/${BOOKING_SERVICE_ROUTE_ENTRY}"
+          resources:
+            limits:
+              memory: "${MEMORY_LIMIT}"
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 40
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 30
 - kind: PersistentVolumeClaim
   apiVersion: v1
   metadata:
@@ -67,7 +221,7 @@ objects:
         from:
           kind: ImageStreamTag
           namespace: openshift
-          name: postgresql:9.5
+          name: postgresql:9.6
     - type: ConfigChange
     replicas: 1
     selector:
@@ -128,6 +282,21 @@ parameters:
   description: The name assigned to all of the frontend objects defined in this template.
   required: true
   value: identityservice
+- name: IDENTITY_SERVICE_ROUTE_ENTRY
+  displayName: IdentityService Route Entry
+  description: Route Path.
+  required: true
+  value: identity
+- name: PRODUCT_SERVICE_ROUTE_ENTRY
+  displayName: ProductService Route Entry
+  description: Route Path.
+  required: true
+  value: products
+- name: BOOKING_SERVICE_ROUTE_ENTRY
+  displayName: BookingService Route Entry
+  description: Route Path.
+  required: true
+  value: booking
 - name: MEMORY_LIMIT
   displayName: Memory Limit
   required: true
@@ -157,20 +326,21 @@ parameters:
   displayName: Git Repository URL
   required: true
   description: The URL of the repository with your application source code.
-  value: https://github.com/marcinkruszynski/webapp.git
+  value: https://github.com/marcinkruszynski/microstore.git
 - name: SOURCE_REPOSITORY_REF
   displayName: Git Reference
   description: Set this to a branch name, tag or other ref of your repository if you
     are not using the default branch.
-- name: CONTEXT_DIR
+- name: IDENTITY_SERVICE_CONTEXT_DIR
   displayName: Context Directory
   description: Set this to the relative path to your project if it is not in the root
     of your repository.
-- name: DOTNET_STARTUP_PROJECT
+  value: "Services/IdentityService"
+- name: IDENTITY_SERVICE_DOTNET_STARTUP_PROJECT
   displayName: Startup Project
   description: Set this to a project file (e.g. csproj) or a folder containing a single
     project file.
-  value: WebApp2
+  value: IdentityService
 - name: DOTNET_SDK_VERSION
   displayName: SDK Version
   description: Set this to configure the default SDK version. This can be set to a
@@ -199,12 +369,16 @@ parameters:
   displayName: Application Hostname
   description: The exposed hostname that will route to the .NET Core service, if left
     blank a value will be defaulted.
-  value: ''
+  value: albania.io
 - name: GITHUB_WEBHOOK_SECRET
   displayName: GitHub Webhook Secret
   description: A secret string used to configure the GitHub webhook.
   generate: expression
   from: "[a-zA-Z0-9]{40}"
+- name: IDENTITY_SERVICE_PATH_BASE
+  required: true
+  displayName: Identity Service Path Base
+  value: /identity
 - name: IDENTITY_DATABASE_SERVICE_NAME
   required: true
   displayName: Identity Database Service Name

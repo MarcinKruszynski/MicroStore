@@ -52,60 +52,6 @@ objects:
     to:
       kind: Service
       name: "${IDENTITY_SERVICE_NAME}"
-- kind: ImageStream
-  apiVersion: v1
-  metadata:
-    name: "${IDENTITY_SERVICE_NAME}"
-    annotations:
-      description: Keeps track of changes in the application image
-- kind: BuildConfig
-  apiVersion: v1
-  metadata:
-    name: "${IDENTITY_SERVICE_NAME}"
-    annotations:
-      description: Defines how to build the application
-  spec:
-    source:
-      type: Git
-      git:
-        uri: "${SOURCE_REPOSITORY_URL}"
-        ref: "${SOURCE_REPOSITORY_REF}"
-      contextDir: "${IDENTITY_SERVICE_CONTEXT_DIR}"
-    strategy:
-      type: Source
-      sourceStrategy:
-        from:
-          kind: ImageStreamTag
-          namespace: "${NAMESPACE}"
-          name: "${DOTNET_IMAGE_STREAM_TAG}"
-        env:
-        - name: DOTNET_STARTUP_PROJECT
-          value: "${IDENTITY_SERVICE_DOTNET_STARTUP_PROJECT}"
-        - name: DOTNET_SDK_VERSION
-          value: "${DOTNET_SDK_VERSION}"
-        - name: DOTNET_ASSEMBLY_NAME
-          value: "${DOTNET_ASSEMBLY_NAME}"
-        - name: DOTNET_NPM_TOOLS
-          value: "${DOTNET_NPM_TOOLS}"
-        - name: DOTNET_TEST_PROJECTS
-          value: "${DOTNET_TEST_PROJECTS}"
-        - name: DOTNET_CONFIGURATION
-          value: "${DOTNET_CONFIGURATION}"
-        - name: DOTNET_RESTORE_SOURCES
-          value: "${DOTNET_RESTORE_SOURCES}"
-        - name: DOTNET_TOOLS
-          value: "${DOTNET_TOOLS}"
-    output:
-      to:
-        kind: ImageStreamTag
-        name: "${IDENTITY_SERVICE_NAME}:latest"
-    triggers:
-    - type: ImageChange
-    - type: ConfigChange
-    - type: GitHub
-      github:
-        secret: "${GITHUB_WEBHOOK_SECRET}"
-    postCommit: {}
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
@@ -114,14 +60,7 @@ objects:
       description: Defines how to deploy the application server
   spec:
     strategy:
-      type: Rolling
-      rollingParams:
-        updatePeriodSeconds: 1
-        intervalSeconds: 1
-        timeoutSeconds: 600
-        maxUnavailable: 25%
-        maxSurge: 25%
-      resources: {}
+      type: Recreate
     triggers:
     - type: ImageChange
       imageChangeParams:
@@ -322,59 +261,11 @@ parameters:
   required: true
   description: The OpenShift Namespace where the .NET builder ImageStream resides.
   value: openshift
-- name: SOURCE_REPOSITORY_URL
-  displayName: Git Repository URL
-  required: true
-  description: The URL of the repository with your application source code.
-  value: https://github.com/marcinkruszynski/microstore.git
-- name: SOURCE_REPOSITORY_REF
-  displayName: Git Reference
-  description: Set this to a branch name, tag or other ref of your repository if you
-    are not using the default branch.
-- name: IDENTITY_SERVICE_CONTEXT_DIR
-  displayName: Context Directory
-  description: Set this to the relative path to your project if it is not in the root
-    of your repository.
-  value: "Services/IdentityService"
-- name: IDENTITY_SERVICE_DOTNET_STARTUP_PROJECT
-  displayName: Startup Project
-  description: Set this to a project file (e.g. csproj) or a folder containing a single
-    project file.
-  value: IdentityService
-- name: DOTNET_SDK_VERSION
-  displayName: SDK Version
-  description: Set this to configure the default SDK version. This can be set to a
-    specific version, '' (lowest version) or 'latest' (highest version).
-  value: ''
-- name: DOTNET_ASSEMBLY_NAME
-  displayName: Startup Assembly
-  description: Set this when the assembly name is overridden in the project file.
-- name: DOTNET_TOOLS
-  displayName: ".NET Tools"
-  description: Set this to a space separated list of .NET tools needed to publish.
-- name: DOTNET_NPM_TOOLS
-  displayName: Npm Tools
-  description: Set this to a space separated list of npm tools needed to publish.
-- name: DOTNET_TEST_PROJECTS
-  displayName: Test projects
-  description: Set this to a space separated list of test projects to run before publishing.
-- name: DOTNET_CONFIGURATION
-  displayName: Configuration
-  description: Set this to configuration (Release/Debug).
-  value: Release
-- name: DOTNET_RESTORE_SOURCES
-  displayName: NuGet package sources
-  description: Set this to override the NuGet.config sources.
 - name: APPLICATION_DOMAIN
   displayName: Application Hostname
   description: The exposed hostname that will route to the .NET Core service, if left
     blank a value will be defaulted.
   value: albania.io
-- name: GITHUB_WEBHOOK_SECRET
-  displayName: GitHub Webhook Secret
-  description: A secret string used to configure the GitHub webhook.
-  generate: expression
-  from: "[a-zA-Z0-9]{40}"
 - name: IDENTITY_SERVICE_PATH_BASE
   required: true
   displayName: Identity Service Path Base

@@ -69,7 +69,7 @@ objects:
         - "${IDENTITY_SERVICE_NAME}"
         from:
           kind: ImageStreamTag
-          name: "${IDENTITY_SERVICE_NAME}:latest"
+          name: "${IDENTITY_SERVICE_REPOSITORY}:latest"
     - type: ConfigChange
     replicas: 1
     selector:
@@ -221,6 +221,11 @@ parameters:
   description: The name assigned to all of the frontend objects defined in this template.
   required: true
   value: identityservice
+- name: IDENTITY_SERVICE_REPOSITORY
+  displayName: IdentityService Repository
+  description: Repository.
+  required: true
+  value: marcinkruszynski/identityservice
 - name: IDENTITY_SERVICE_ROUTE_ENTRY
   displayName: IdentityService Route Entry
   description: Route Path.

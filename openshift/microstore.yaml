@@ -69,7 +69,8 @@ objects:
         - "${IDENTITY_SERVICE_NAME}"
         from:
           kind: ImageStreamTag
-          name: "${IDENTITY_SERVICE_REPOSITORY}:latest"
+          name: "${IDENTITY_SERVICE_NAME}:latest"
+          namespace: "${APPLICATION_NAMESPACE}"
     - type: ConfigChange
     replicas: 1
     selector:
@@ -221,11 +222,6 @@ parameters:
   description: The name assigned to all of the frontend objects defined in this template.
   required: true
   value: identityservice
-- name: IDENTITY_SERVICE_REPOSITORY
-  displayName: IdentityService Repository
-  description: Repository.
-  required: true
-  value: marcinkruszynski/identityservice
 - name: IDENTITY_SERVICE_ROUTE_ENTRY
   displayName: IdentityService Route Entry
   description: Route Path.
@@ -266,6 +262,11 @@ parameters:
   required: true
   description: The OpenShift Namespace where the .NET builder ImageStream resides.
   value: openshift
+- name: APPLICATION_NAMESPACE
+  displayName: Namespace
+  required: true
+  description: The Application Namespace where the .NET builder ImageStream resides.
+  value: microstore
 - name: APPLICATION_DOMAIN
   displayName: Application Hostname
   description: The exposed hostname that will route to the .NET Core service, if left

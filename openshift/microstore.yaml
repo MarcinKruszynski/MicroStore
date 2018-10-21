@@ -52,6 +52,12 @@ objects:
     to:
       kind: Service
       name: "${IDENTITY_SERVICE_NAME}"
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: "${IDENTITY_SERVICE_NAME}"
+  spec:
+    dockerImageRepository: "docker.io/${DOCKER_ORG}/${IDENTITY_SERVICE_NAME}"
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
@@ -70,7 +76,6 @@ objects:
         from:
           kind: ImageStreamTag
           name: "${IDENTITY_SERVICE_NAME}:latest"
-          namespace: "${APPLICATION_NAMESPACE}"
     - type: ConfigChange
     replicas: 1
     selector:
@@ -262,11 +267,11 @@ parameters:
   required: true
   description: The OpenShift Namespace where the .NET builder ImageStream resides.
   value: openshift
-- name: APPLICATION_NAMESPACE
-  displayName: Namespace
+- name: DOCKER_ORG
+  displayName: Docker org
   required: true
-  description: The Application Namespace where the .NET builder ImageStream resides.
-  value: microstore
+  description: The docker org.
+  value: marcinkruszynski
 - name: APPLICATION_DOMAIN
   displayName: Application Hostname
   description: The exposed hostname that will route to the .NET Core service, if left

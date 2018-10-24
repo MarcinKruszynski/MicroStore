@@ -37,8 +37,7 @@ objects:
         "kind": "Service"}]'
   spec:
     ports:
-    - name: web
-      port: 8080
+    - port: 8080
       targetPort: 8080
     selector:
       name: "${IDENTITY_SERVICE_NAME}"
@@ -221,17 +220,142 @@ objects:
           resources:
             limits:
               memory: "${MEMORY_POSTGRESQL_LIMIT}"
+# Web App
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${WEB_APP_NAME}"
+    annotations:
+      description: Exposes and load balances the application pods
+  spec:
+    ports:
+    - port: 8080
+      targetPort: 8080
+    selector:
+      name: "${WEB_APP_NAME}"
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: "${WEB_APP_NAME}"
+  spec:
+    host: "${APPLICATION_DOMAIN}"
+    to:
+      kind: Service
+      name: "${WEB_APP_NAME}"
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: "${WEB_APP_NAME}"
+  spec:
+    dockerImageRepository: "docker.io/${DOCKER_ORG}/${WEB_APP_NAME}"
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${WEB_APP_NAME}"
+    annotations:
+      description: Defines how to deploy the application server
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - "${WEB_APP_NAME}"
+        from:
+          kind: ImageStreamTag
+          name: "${WEB_APP_NAME}:latest"
+    - type: ConfigChange
+    replicas: 1
+    selector:
+      name: "${WEB_APP_NAME}"
+    template:
+      metadata:
+        name: "${WEB_APP_NAME}"
+        labels:
+          name: "${WEB_APP_NAME}"
+      spec:
+        containers:
+        - name: "${WEB_APP_NAME}"
+          image: " "
+          ports:
+          - containerPort: 8080
+          env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Development
+          - name: IdentityUrl
+            value: "http://${APPLICATION_DOMAIN}/${IDENTITY_SERVICE_ROUTE_ENTRY}"
+          - name: GatewayApiUrl
+            value: "http://${APPLICATION_DOMAIN}/${GATEWAY_API_ROUTE_ENTRY}"
+          - name: IdentityUrlHC
+            value: "http://${IDENTITY_SERVICE_NAME}/hc"
+          - name: ProductUrlHC
+            value: "http://${PRODUCT_SERVICE_NAME}/hc"
+          - name: BookingUrlHC
+            value: "http://${BOOKING_SERVICE_NAME}/hc"
+          - name: PaymentUrlHC
+            value: "http://${PAYMENT_SERVICE_NAME}/hc"
+          - name: NotificationUrlHC
+            value: "http://${NOTIFICATION_SERVICE_NAME}/hc"
+          resources:
+            limits:
+              memory: "${MEMORY_LIMIT}"
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 40
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 30
 parameters:
 - name: IDENTITY_SERVICE_NAME
   displayName: IdentityService Name
   description: The name assigned to all of the frontend objects defined in this template.
   required: true
   value: identityservice
+- name: PRODUCT_SERVICE_NAME
+  displayName: ProductService Name
+  description: The name assigned to all of the frontend objects defined in this template.
+  required: true
+  value: productservice
+- name: BOOKING_SERVICE_NAME
+  displayName: BookingService Name
+  description: The name assigned to all of the frontend objects defined in this template.
+  required: true
+  value: bookingservice
+- name: PAYMENT_SERVICE_NAME
+  displayName: PaymentService Name
+  description: The name assigned to all of the frontend objects defined in this template.
+  required: true
+  value: paymentservice
+- name: NOTIFICATION_SERVICE_NAME
+  displayName: NotificationService Name
+  description: The name assigned to all of the frontend objects defined in this template.
+  required: true
+  value: notificationservice
+- name: WEB_APP_NAME
+  displayName: WebApp Name
+  description: The name assigned to all of the frontend objects defined in this template.
+  required: true
+  value: webapp
 - name: IDENTITY_SERVICE_ROUTE_ENTRY
   displayName: IdentityService Route Entry
   description: Route Path.
   required: true
   value: identity
+- name: GATEWAY_API_ROUTE_ENTRY
+  displayName: GatewayApi Route Entry
+  description: Route Path.
+  required: true
+  value: apigateway
 - name: PRODUCT_SERVICE_ROUTE_ENTRY
   displayName: ProductService Route Entry
   description: Route Path.
@@ -276,7 +400,7 @@ parameters:
   displayName: Application Hostname
   description: The exposed hostname that will route to the .NET Core service, if left
     blank a value will be defaulted.
-  value: albania.io
+  value: microstore.172.29.43.22.nip.io
 - name: IDENTITY_SERVICE_PATH_BASE
   required: true
   displayName: Identity Service Path Base

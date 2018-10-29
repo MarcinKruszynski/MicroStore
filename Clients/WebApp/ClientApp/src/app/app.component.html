@@ -1,0 +1,16 @@
+<mat-toolbar  color="primary">
+    <mat-toolbar-row>
+        <span>Micro Store</span>
+        <span class="example-spacer"></span>
+        <button mat-icon-button (click)="subscribeToNotifications()">
+            <mat-icon aria-label="Example icon-button with a heart icon">favorite</mat-icon>
+        </button>
+        <button mat-icon-button (click)="sendNewsletter()">
+            <mat-icon aria-label="Example icon-button with a send icon">send</mat-icon>
+        </button>        
+    </mat-toolbar-row>
+</mat-toolbar>
+<main>
+    <app-products></app-products>    
+</main>
+

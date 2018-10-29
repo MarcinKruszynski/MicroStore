@@ -1,0 +1,13 @@
+<h2>My Products</h2>
+
+<mat-card *ngFor="let product of products">
+    <mat-card-header>
+        <mat-card-title>{{product.name}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+    100 PLN
+    </mat-card-content>
+    <mat-card-actions>
+        <a mat-raised-button href="{{product.url}}" color="primary">Add</a>
+    </mat-card-actions>
+</mat-card>

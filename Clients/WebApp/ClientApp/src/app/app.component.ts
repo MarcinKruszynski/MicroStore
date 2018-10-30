@@ -10,7 +10,8 @@ import {NewsletterService} from "./newsletter.service";
 export class AppComponent {
   readonly VAPID_PUBLIC_KEY = "BFus7A-uLbVRK7IPlwQ-iUtOYAdrwL0vsFwretaItkxPLVhmLvzYvi9tP1ufzmL1Y34IA2t_u1J5s_NU5esNfWY";
 
-  title = 'My First Angular App!';
+  title = 'Micro Store';
+  user = 'popek365@go2.pl';
 
   constructor(
     private swPush: SwPush,

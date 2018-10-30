@@ -3,12 +3,18 @@
         <span>{{title}}</span>
         <span class="spacer"></span>
         <button mat-icon-button (click)="subscribeToNotifications()">
-            <mat-icon aria-label="notifications" class="notifications-icon">notifications</mat-icon>
-        </button>  
-        <button mat-button>  
+            <mat-icon aria-label="notifications off">notifications_off</mat-icon>
+        </button>
+        <button mat-icon-button (click)="subscribeToNotifications()">
+            <mat-icon aria-label="notifications">notifications</mat-icon>
+        </button> 
+        <button mat-button [matMenuTriggerFor]="menu">  
             {{user}}        
             <mat-icon aria-label="account" class="user-icon">account_circle</mat-icon>            
         </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>Sign out</button>            
+        </mat-menu>
     </mat-toolbar-row>
 </mat-toolbar>
 <main>

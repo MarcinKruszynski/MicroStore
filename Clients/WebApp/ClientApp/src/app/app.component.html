@@ -7,13 +7,15 @@
         </button>
         <button mat-icon-button (click)="subscribeToNotifications()">
             <mat-icon aria-label="notifications">notifications</mat-icon>
-        </button> 
-        <button mat-button [matMenuTriggerFor]="menu">  
-            {{user}}        
-            <mat-icon aria-label="account" class="user-icon">account_circle</mat-icon>            
-        </button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item>Sign out</button>            
+        </button>        
+        <button mat-button [matMenuTriggerFor]="menu">            
+            <span class="ml-2">{{user}}</span>
+            <mat-icon aria-label="account" class="user-icon">account_circle</mat-icon>
+          </button>
+        <mat-menu #menu="matMenu">            
+            <button mat-menu-item>                
+                <span class="sign-out-span">Sign out</span>
+            </button>            
         </mat-menu>
     </mat-toolbar-row>
 </mat-toolbar>

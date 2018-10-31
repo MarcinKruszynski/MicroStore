@@ -1,1 +1,15 @@
+.product-card-container {
+    margin: 16px 0 0 16px;
+    display: flex;
+    flex-wrap: wrap;
+    
   
+    .mat-card {
+      margin: 0 16px 16px 0;
+      width: 350px;
+    }
+  
+    img {
+      background-color: gray;
+    }
+}

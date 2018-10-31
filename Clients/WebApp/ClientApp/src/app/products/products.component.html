@@ -1,13 +1,14 @@
-<h2>My Products</h2>
+<div class="product-card-container">
+    <mat-card *ngFor="let product of products">    
+        <img mat-card-image src="https://material.angularjs.org/latest/img/washedout.png">    
+        <mat-card-title>{{product.name}}</mat-card-title>    
+        <mat-card-content>
+            <p>100 PLN</p>
+        </mat-card-content>        
+        <mat-card-actions align="end">
+            <button mat-button>BOOK</button>        
+        </mat-card-actions>
+    </mat-card>
+</div>
 
-<mat-card *ngFor="let product of products">
-    <mat-card-header>
-        <mat-card-title>{{product.name}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-    100 PLN
-    </mat-card-content>
-    <mat-card-actions>
-        <a mat-raised-button href="{{product.url}}" color="primary">Add</a>
-    </mat-card-actions>
-</mat-card>
+

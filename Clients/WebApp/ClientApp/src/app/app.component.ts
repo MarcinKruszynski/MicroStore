@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+
+import { SecurityService } from './security.service';
+import { ConfigurationService } from './configuration.service';
 import {SwPush} from "@angular/service-worker";
 import {NewsletterService} from "./newsletter.service";
 
@@ -7,15 +11,61 @@ import {NewsletterService} from "./newsletter.service";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   readonly VAPID_PUBLIC_KEY = "BFus7A-uLbVRK7IPlwQ-iUtOYAdrwL0vsFwretaItkxPLVhmLvzYvi9tP1ufzmL1Y34IA2t_u1J5s_NU5esNfWY";
 
   title = 'Micro Store';
-  user = 'popek365@go2.pl';
+  
+  Authenticated: boolean = false;
+  subscription: Subscription;
+  private userName: string = '';
 
-  constructor(
-    private swPush: SwPush,
-    private newsletterService: NewsletterService) {}
+  constructor(      
+      private securityService: SecurityService,
+      private configurationService: ConfigurationService,
+      private swPush: SwPush,
+      private newsletterService: NewsletterService
+  ) {
+      this.Authenticated = this.securityService.IsAuthorized;    
+  }
+
+  ngOnInit() {
+      console.log('app on init');
+      this.subscription = this.securityService.authenticationChallenge$.subscribe(res => {
+          this.Authenticated = res;
+          this.userName = this.securityService.UserData.email;
+      });
+
+      if (window.location.hash) {
+          this.securityService.AuthorizedCallback();
+      }
+
+      console.log('identity component, checking authorized' + this.securityService.IsAuthorized);
+      this.Authenticated = this.securityService.IsAuthorized;
+
+      if (this.Authenticated) {
+          if (this.securityService.UserData)
+              this.userName = this.securityService.UserData.email;
+      }
+
+      //Get configuration from server environment variables:
+      console.log('configuration');
+      this.configurationService.load();        
+  }  
+
+  logoutClicked(event: any) {
+      event.preventDefault();
+      console.log('Logout clicked');
+      this.logout();
+  }
+
+  login() {
+      this.securityService.Authorize();
+  }
+
+  logout() {      
+      this.securityService.Logoff();
+  }
 
   subscribeToNotifications() {
 

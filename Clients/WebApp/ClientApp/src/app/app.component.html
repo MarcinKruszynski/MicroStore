@@ -2,14 +2,14 @@
     <mat-toolbar-row>
         <span>{{title}}</span>
         <span class="spacer"></span>
-        <button mat-icon-button (click)="subscribeToNotifications()">
+        <button mat-icon-button (click)="subscribeToNotifications()" *ngIf="Authenticated">
             <mat-icon aria-label="notifications off">notifications_off</mat-icon>
         </button>
-        <button mat-icon-button (click)="subscribeToNotifications()">
+        <button mat-icon-button (click)="subscribeToNotifications()" *ngIf="Authenticated">
             <mat-icon aria-label="notifications">notifications</mat-icon>
         </button>        
-        <button mat-button [matMenuTriggerFor]="menu">            
-            <span class="ml-2">{{user}}</span>
+        <button mat-button [matMenuTriggerFor]="menu" *ngIf="Authenticated">            
+            <span class="ml-2">{{userName}}</span>
             <mat-icon aria-label="account" class="user-icon">account_circle</mat-icon>
           </button>
         <mat-menu #menu="matMenu">            
@@ -17,6 +17,9 @@
                 <span class="sign-out-span">Sign out</span>
             </button>            
         </mat-menu>
+        <button mat-button *ngIf="!Authenticated">            
+            <span class="ml-2">Sign in</span>            
+        </button>
     </mat-toolbar-row>
 </mat-toolbar>
 <main>

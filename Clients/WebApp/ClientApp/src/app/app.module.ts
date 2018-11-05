@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { ProductsComponent } from './products/products.component';
@@ -21,7 +23,9 @@ import { environment } from '../environments/environment';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,    
+    RouterModule,
+    HttpClientModule,
+    HttpModule,    
     BrowserAnimationsModule,
     MatToolbarModule,
     MatCardModule,

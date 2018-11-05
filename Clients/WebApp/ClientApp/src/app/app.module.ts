@@ -23,7 +23,7 @@ import { environment } from '../environments/environment';
   ],
   imports: [
     BrowserModule,
-    RouterModule,
+    RouterModule.forRoot([]),
     HttpClientModule,
     HttpModule,    
     BrowserAnimationsModule,

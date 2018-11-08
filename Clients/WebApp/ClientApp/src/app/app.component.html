@@ -13,11 +13,11 @@
             <mat-icon aria-label="account" class="user-icon">account_circle</mat-icon>
           </button>
         <mat-menu #menu="matMenu">            
-            <button mat-menu-item>                
+            <button mat-menu-item (click)="logout()">                
                 <span class="sign-out-span">Sign out</span>
             </button>            
         </mat-menu>
-        <button mat-button *ngIf="!Authenticated">            
+        <button mat-button (click)="login()" *ngIf="!Authenticated">            
             <span class="ml-2">Sign in</span>            
         </button>
     </mat-toolbar-row>

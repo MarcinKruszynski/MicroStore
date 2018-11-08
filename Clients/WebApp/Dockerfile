@@ -5,8 +5,7 @@ RUN apt-get update -qq && \
     apt-get install -qq -y wget && \
     apt-get install -qq -y gnupg2 && \
     wget -qO- https://deb.nodesource.com/setup_8.x | bash - && \
-    apt-get install -qq -y build-essential nodejs && \
-	npm i -g @angular/cli
+    apt-get install -qq -y build-essential nodejs 
 # End setup
 
 WORKDIR /app
@@ -20,8 +19,7 @@ RUN apt-get update -qq && \
     apt-get install -qq -y wget && \
     apt-get install -qq -y gnupg2 && \
     wget -qO- https://deb.nodesource.com/setup_8.x | bash - && \
-    apt-get install -qq -y build-essential nodejs && \
-	npm i -g @angular/cli
+    apt-get install -qq -y build-essential nodejs 
 # End setup
 
 WORKDIR /src

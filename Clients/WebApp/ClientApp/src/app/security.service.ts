@@ -79,7 +79,7 @@ export class SecurityService {
         this.ResetAuthorizationData();
 
         let authorizationUrl = this.authorityUrl + '/connect/authorize';
-        let client_id = 'js';
+        let client_id = 'spa';
         let redirect_uri = location.origin + '/';
         let response_type = 'id_token token';
         let scope = 'openid profile products booking notification bookingagg';

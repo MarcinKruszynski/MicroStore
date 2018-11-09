@@ -43,9 +43,9 @@ namespace IdentityService
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
 
-                    RedirectUris = { $"{clientsUrl["Spa"]}/callback.html" },
+                    RedirectUris = { $"{clientsUrl["Spa"]}/" },
                     RequireConsent = false,
-                    PostLogoutRedirectUris = { $"{clientsUrl["Spa"]}/index.html" },
+                    PostLogoutRedirectUris = { $"{clientsUrl["Spa"]}/" },
                     AllowedCorsOrigins = { $"{clientsUrl["Spa"]}" },
 
                     AllowedScopes =

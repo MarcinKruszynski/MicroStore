@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   
   Authenticated: boolean = false;
   subscription: Subscription;
-  private userName: string = '';
+  userName: string = '';
 
   constructor(      
       private securityService: SecurityService,

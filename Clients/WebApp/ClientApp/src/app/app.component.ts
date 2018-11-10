@@ -33,7 +33,9 @@ export class AppComponent implements OnInit {
       console.log('app on init');
       this.subscription = this.securityService.authenticationChallenge$.subscribe(res => {
           this.Authenticated = res;
-          this.userName = this.securityService.UserData.email;
+          console.log('on subscribe: ');
+          console.log(this.securityService.UserData);
+          this.userName = this.securityService.UserData.name;
       });
 
       if (window.location.hash) {
@@ -44,8 +46,11 @@ export class AppComponent implements OnInit {
       this.Authenticated = this.securityService.IsAuthorized;
 
       if (this.Authenticated) {
-          if (this.securityService.UserData)
-              this.userName = this.securityService.UserData.email;
+          if (this.securityService.UserData) {
+              console.log('on init: ');
+              console.log(this.securityService.UserData);
+              this.userName = this.securityService.UserData.name;
+          }
       }
 
       //Get configuration from server environment variables:

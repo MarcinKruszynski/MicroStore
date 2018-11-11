@@ -1,38 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Product } from './product';
-import { PRODUCTS } from './mock-products';
-import { Observable, of } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Response } from '@angular/http';
+
+import { DataService } from './data.service';
+import { ConfigurationService } from './configuration.service';
+import { IProductItem } from './productItem.model';
+
+import { Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private productsUrl = 'api/products';  // URL to web api
+  private productsUrl: string = '';  
 
-  constructor(private http: HttpClient) { }
-
-  getProducts(): Observable<Product[]> {
-    return of(PRODUCTS);
-    //return this.http.get<Product[]>(this.productsUrl)
-    //            .pipe(
-    //              catchError(this.handleError('getProducts', []))
-    //            );
+  constructor(private service: DataService, private configurationService: ConfigurationService) {
+    this.configurationService.settingsLoaded$.subscribe(x => {
+        this.productsUrl = this.configurationService.serverSettings.gatewayApiUrl + '/api/v1/p/products';        
+    });
   }
 
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-   
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-   
-      // TODO: better job of transforming error for user consumption
-      //this.log(`${operation} failed: ${error.message}`);
-   
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+  getProducts(): Observable<IProductItem[]> {
+    return this.service.get(this.productsUrl)
+            .pipe(
+                map((response: any) => {
+                    return response;
+                })
+            );
   }
+
 }

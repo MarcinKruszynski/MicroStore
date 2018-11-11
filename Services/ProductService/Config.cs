@@ -14,15 +14,15 @@ namespace ProductService
             {
                 new ProductItem
                 {
-                    Name = "Progressive apps - 31.06.2018",
+                    Name = ".NET Core microservices",
                     StockQuantity = 5000,
-                    Price = 404
+                    Price = 200
                 },
                 new ProductItem
                 {
-                    Name = ".NET microservices - 31.09.2018",
+                    Name = "Angular 7 progressive web app",
                     StockQuantity = 6000,
-                    Price = 500
+                    Price = 100
                 }
             };
         }

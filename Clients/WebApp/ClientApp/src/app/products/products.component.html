@@ -1,6 +1,6 @@
 <div class="product-card-container">
     <mat-card *ngFor="let product of products">    
-        <img mat-card-image src="assets/img/default.jpg">    
+        <img mat-card-image src="assets/img/product{{product.id}}.jpg">    
         <mat-card-title>{{product.name}}</mat-card-title>    
         <mat-card-content>
             <p>{{product.price}} PLN</p>

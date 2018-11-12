@@ -39,6 +39,8 @@ export class SecurityService {
     public IsAuthorized: boolean;
 
     public GetToken(): any {
+        let token = this.storage.retrieve('authorizationData');
+        console.log("get authorizationData=" + token);
         return this.storage.retrieve('authorizationData');
     }
 
@@ -57,6 +59,7 @@ export class SecurityService {
         }
 
         this.storage.store('authorizationData', token);
+        console.log("set authorizationData=" + token);
         this.storage.store('authorizationDataIdToken', id_token);
         this.IsAuthorized = true;
         this.storage.store('IsAuthorized', true);
@@ -105,6 +108,7 @@ export class SecurityService {
         this.ResetAuthorizationData();
 
         let hash = window.location.hash.substr(1);
+        console.log("AuthorizedCallback hash=" + hash);
 
         let result: any = hash.split('&').reduce(function (result: any, item: string) {
             let parts = item.split('=');
@@ -145,6 +149,7 @@ export class SecurityService {
 
 
         if (authResponseIsValid) {
+            console.log('AuthorizedCallback SetAuthorizationData token=' + token + ' id_token=' + id_token);
             this.SetAuthorizationData(token, id_token);
         }
     }

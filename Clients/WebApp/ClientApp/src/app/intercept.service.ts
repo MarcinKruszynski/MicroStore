@@ -18,15 +18,8 @@ export class InterceptService  implements HttpInterceptor {
 
 	// intercept request and add token
   	intercept(request: HttpRequest<any>, next: HttpHandler):Observable<HttpEvent<any>> {
-
-    	// modify request
-	    request = request.clone({
-	      setHeaders: {
-	        Authorization: `Bearer ${localStorage.getItem('MY_TOKEN')}`
-	      }
-	    });
-	   
-	   	console.log("----request----");
+    	
+	  console.log("----request----");
 
 	 	console.log(request);
 

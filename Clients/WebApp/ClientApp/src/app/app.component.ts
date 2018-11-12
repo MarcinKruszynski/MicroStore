@@ -39,6 +39,7 @@ export class AppComponent implements OnInit {
       });
 
       if (window.location.hash) {
+          console.log("AuthorizedCallback window.location.hash=" + window.location.hash);
           this.securityService.AuthorizedCallback();
       }
 

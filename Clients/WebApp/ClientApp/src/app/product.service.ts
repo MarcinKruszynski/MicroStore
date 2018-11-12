@@ -16,12 +16,15 @@ export class ProductService {
   private productsUrl: string = '';  
 
   constructor(private service: DataService, private configurationService: ConfigurationService) {
-    this.configurationService.settingsLoaded$.subscribe(x => {
-        this.productsUrl = this.configurationService.serverSettings.gatewayApiUrl + '/api/v1/p/products';        
-    });
+    if (this.configurationService.isReady)
+        this.productsUrl = this.configurationService.serverSettings.gatewayApiUrl + '/api/v1/p/products'; 
+    else
+        this.configurationService.settingsLoaded$.subscribe(x => {
+            this.productsUrl = this.configurationService.serverSettings.gatewayApiUrl + '/api/v1/p/products';             
+        });
   }
 
-  getProducts(): Observable<IProductItem[]> {
+  getProducts(): Observable<IProductItem[]> {    
     return this.service.get(this.productsUrl)
             .pipe(
                 map((response: any) => {

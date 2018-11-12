@@ -16,6 +16,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
+import { InterceptService } from './intercept.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ProductService } from './product.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +38,13 @@ import { environment } from '../environments/environment';
     MatMenuModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
-  providers: [],
+  providers: [InterceptService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptService,
+      multi: true
+    }    
+  ], 
   bootstrap: [AppComponent]
 })
 export class AppModule { }

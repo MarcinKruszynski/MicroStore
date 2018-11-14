@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../configuration.service';
 import { IProductItem } from '../productItem.model';
 import { ProductService } from '../product.service';
+import { BookingService } from '../booking.service';
 
 @Component({
   selector: 'app-products',
@@ -12,7 +13,7 @@ export class ProductsComponent implements OnInit {
 
   products: IProductItem[];
 
-  constructor(private productService: ProductService, private configurationService: ConfigurationService) { }  
+  constructor(private productService: ProductService, private bookingService: BookingService, private configurationService: ConfigurationService) { }  
 
   ngOnInit() {
     if (this.configurationService.isReady) {
@@ -29,8 +30,8 @@ export class ProductsComponent implements OnInit {
       .subscribe(products => this.products = products);    
   }
 
-  book(): void {
-    
+  book(product: IProductItem): void {
+    this.bookingService.book(product);
   }
 
 }

@@ -31,7 +31,10 @@ export class ProductsComponent implements OnInit {
   }
 
   book(product: IProductItem): void {
-    this.bookingService.book(product);
+    this.bookingService.book(product).subscribe(
+      x => {
+          console.log("after book: " + x);
+      }
+    );
   }
-
 }

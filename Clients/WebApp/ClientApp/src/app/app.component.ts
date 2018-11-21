@@ -12,7 +12,7 @@ import {NotificationService} from "./notification.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  readonly VAPID_PUBLIC_KEY = "BFus7A-uLbVRK7IPlwQ-iUtOYAdrwL0vsFwretaItkxPLVhmLvzYvi9tP1ufzmL1Y34IA2t_u1J5s_NU5esNfWY";
+  readonly VAPID_PUBLIC_KEY = "BEoYccO5q2KhdfX1Wt0U4tpWzZBRa4FGImrvzXqu073QmO2V7r3aGv0MOf-BizbWX5V3H65ns3p7uZ07DMMrjvk";
 
   title = 'Micro Store';
   

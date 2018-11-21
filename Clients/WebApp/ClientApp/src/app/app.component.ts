@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { SecurityService } from './security.service';
 import { ConfigurationService } from './configuration.service';
 import {SwPush} from "@angular/service-worker";
-import {NewsletterService} from "./newsletter.service";
+import {NotificationService} from "./notification.service";
 
 @Component({
   selector: 'app-root',
@@ -20,13 +20,17 @@ export class AppComponent implements OnInit {
   subscription: Subscription;
   userName: string = '';
 
+  CanSubscribe: boolean = false;
+  Subscribed: boolean = false;
+
   constructor(      
       private securityService: SecurityService,
       private configurationService: ConfigurationService,
       private swPush: SwPush,
-      private newsletterService: NewsletterService
+      private notificationService: NotificationService
   ) {
-      this.Authenticated = this.securityService.IsAuthorized;    
+      this.Authenticated = this.securityService.IsAuthorized; 
+      this.CanSubscribe = this.swPush.isEnabled;        
   }
 
   ngOnInit() {
@@ -45,6 +49,7 @@ export class AppComponent implements OnInit {
 
       console.log('identity component, checking authorized' + this.securityService.IsAuthorized);
       this.Authenticated = this.securityService.IsAuthorized;
+      this.CanSubscribe = this.swPush.isEnabled; 
 
       if (this.Authenticated) {
           if (this.securityService.UserData) {
@@ -78,11 +83,11 @@ export class AppComponent implements OnInit {
     this.swPush.requestSubscription({
         serverPublicKey: this.VAPID_PUBLIC_KEY
     })
-    .then(sub => this.newsletterService.addPushSubscriber(sub).subscribe())
-    .catch(err => console.error("Could not subscribe to notifications", err));
+    .then(sub => this.notificationService.addPushSubscriber(sub).subscribe(() => this.Subscribed = true))
+    .catch(err => {
+        this.Subscribed = false;
+        console.error("Could not subscribe to notifications", err)
+    });        
   }
-
-  sendNewsletter() {
-    this.newsletterService.send().subscribe();
-  }
+  
 }

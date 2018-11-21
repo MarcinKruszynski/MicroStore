@@ -1,11 +1,8 @@
 <mat-toolbar  color="primary">
     <mat-toolbar-row>
         <span>{{title}}</span>
-        <span class="spacer"></span>
-        <button mat-icon-button (click)="subscribeToNotifications()" *ngIf="Authenticated">
-            <mat-icon aria-label="notifications off">notifications_off</mat-icon>
-        </button>
-        <button mat-icon-button (click)="subscribeToNotifications()" *ngIf="Authenticated">
+        <span class="spacer"></span>        
+        <button mat-icon-button (click)="subscribeToNotifications()" *ngIf="Authenticated && CanSubscribe && !Subscribed">
             <mat-icon aria-label="notifications">notifications</mat-icon>
         </button>        
         <button mat-button [matMenuTriggerFor]="menu" *ngIf="Authenticated">            

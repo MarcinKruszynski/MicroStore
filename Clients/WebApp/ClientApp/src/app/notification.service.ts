@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs'
+import { ConfigurationService } from './configuration.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -11,27 +12,28 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class NewsletterService {  
+export class NotificationService {  
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
+  private notificationsUrl: string = '';  
+
+  constructor(private http: HttpClient, private configurationService: ConfigurationService) {
+    if (this.configurationService.isReady)
+        this.notificationsUrl = this.configurationService.serverSettings.gatewayApiUrl + '/api/v1/n/notifications'; 
+    else
+        this.configurationService.settingsLoaded$.subscribe(x => {
+            this.notificationsUrl = this.configurationService.serverSettings.gatewayApiUrl + '/api/v1/n/notifications';             
+        });
+   }
 
   addPushSubscriber(sub: any) {
     console.log("addPushSubscriber before:", JSON.stringify(sub));
 
-    return this.http.post(this.baseUrl + 'api/notifications', sub, httpOptions);
+    return this.http.post(this.notificationsUrl, sub, httpOptions);
               /*  .pipe(
                   tap(_ => this.log(`added notification subscription`)),
                   catchError(this.handleError<any>('addPushSubscriber'))
                 ); */
-  }
-
-  send() {
-    return this.http.post(this.baseUrl + 'api/newsletter', {}, httpOptions);
-              /*  .pipe(
-                  tap(_ => this.log(`sent notification`)),
-                  catchError(this.handleError<any>('send'))
-                ); */
-  }
+  }  
 
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

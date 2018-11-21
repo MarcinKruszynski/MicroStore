@@ -83,7 +83,7 @@ export class AppComponent implements OnInit {
     this.swPush.requestSubscription({
         serverPublicKey: this.VAPID_PUBLIC_KEY
     })
-    .then(sub => this.notificationService.addPushSubscriber(sub).subscribe(() => this.Subscribed = true))
+    .then(sub => this.notificationService.addPushSubscriber(sub).subscribe(res => this.Subscribed = res))
     .catch(err => {
         this.Subscribed = false;
         console.error("Could not subscribe to notifications", err)

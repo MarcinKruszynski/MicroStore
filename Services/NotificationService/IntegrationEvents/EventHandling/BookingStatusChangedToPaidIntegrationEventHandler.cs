@@ -34,9 +34,11 @@ namespace NotificationService.IntegrationEvents.EventHandling
             var payload = JsonConvert.SerializeObject(
                 new
                 {
-                    bookingId = message.BookingId,                    
-                    productName = message.ProductName,
-                    quantity = message.Quantity
+                    notification = new
+                    {
+                        title = "Micro Store",
+                        body = "Booking " + message.BookingId + " has been paid."
+                    }                    
                 }
             );
 

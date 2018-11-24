@@ -25,6 +25,8 @@ Sample ASP.NET Core microservice app using:
 - Helm
 - Azure AKS
 - Azure Service Bus
+- Angular 7
+- PWA
 
 To be continued
 

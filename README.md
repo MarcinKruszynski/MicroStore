@@ -28,6 +28,6 @@ Sample ASP.NET Core microservice app using:
 - Angular 7
 - PWA
 
-To be continued
+
 
 

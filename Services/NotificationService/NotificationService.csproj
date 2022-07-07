@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.6.0" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.15" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="3.1.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
     <PackageReference Include="Npgsql" Version="4.0.1" />
